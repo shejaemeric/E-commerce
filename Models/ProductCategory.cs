@@ -18,6 +18,6 @@ namespace E_Commerce_Api.Models
         public DateTime Modified_At { get; set; }
         public DateTime Deleted_At { get; set; }
 
-        public Product Product { get; set; }
+        public ICollection<Product> Products { get; set; }
     }
 }

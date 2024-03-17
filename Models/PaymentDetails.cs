@@ -18,7 +18,7 @@ namespace E_Commerce_Api.Models
 
         public string? Card_Holder_Name { get; set; }
 
-         public int? Card_Number { get; set; }
+         public long? Card_Number { get; set; }
         public int? CVV { get; set; }
         public int? Expiration_Month { get; set; }
         public int? Expiration_Year { get; set; }
