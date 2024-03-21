@@ -54,6 +54,50 @@ namespace ECommerceApi.Migrations
                     b.ToTable("CartItems");
                 });
 
+            modelBuilder.Entity("E_Commerce_Api.Models.CartItem_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Product_Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ShoppingSession_Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CartItems_Archive");
+                });
+
             modelBuilder.Entity("E_Commerce_Api.Models.Discount", b =>
                 {
                     b.Property<int>("Id")
@@ -66,9 +110,6 @@ namespace ECommerceApi.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("Created_At")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Deleted_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Desc")
@@ -90,6 +131,55 @@ namespace ECommerceApi.Migrations
                     b.ToTable("Discounts");
                 });
 
+            modelBuilder.Entity("E_Commerce_Api.Models.Discount_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Desc")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Discount_percent")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<DateTime>("Modified_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Discounts_Archive");
+                });
+
             modelBuilder.Entity("E_Commerce_Api.Models.Inventory", b =>
                 {
                     b.Property<int>("Id")
@@ -99,9 +189,6 @@ namespace ECommerceApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created_At")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Deleted_At")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Modified_At")
@@ -115,7 +202,45 @@ namespace ECommerceApi.Migrations
                     b.ToTable("Inventories");
                 });
 
-            modelBuilder.Entity("E_Commerce_Api.Models.OrderDetails", b =>
+            modelBuilder.Entity("E_Commerce_Api.Models.Inventory_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Inventories_Archive");
+                });
+
+            modelBuilder.Entity("E_Commerce_Api.Models.OrderDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -147,7 +272,51 @@ namespace ECommerceApi.Migrations
                     b.ToTable("OrderDetails");
                 });
 
-            modelBuilder.Entity("E_Commerce_Api.Models.OrderItems", b =>
+            modelBuilder.Entity("E_Commerce_Api.Models.OrderDetail_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PaymentDetailsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Total")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderDetails_Archive");
+                });
+
+            modelBuilder.Entity("E_Commerce_Api.Models.OrderItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,7 +348,51 @@ namespace ECommerceApi.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("E_Commerce_Api.Models.PaymentDetails", b =>
+            modelBuilder.Entity("E_Commerce_Api.Models.OrderItem_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderItems_Archive");
+                });
+
+            modelBuilder.Entity("E_Commerce_Api.Models.PaymentDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -224,6 +437,67 @@ namespace ECommerceApi.Migrations
                     b.ToTable("PaymentDetails");
                 });
 
+            modelBuilder.Entity("E_Commerce_Api.Models.PaymentDetail_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CVV")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Card_Holder_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("Card_Number")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Expiration_Month")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Expiration_Year")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Modified_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Payment_Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentDetails_Archive");
+                });
+
             modelBuilder.Entity("E_Commerce_Api.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -233,9 +507,6 @@ namespace ECommerceApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created_At")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Deleted_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Desc")
@@ -286,9 +557,6 @@ namespace ECommerceApi.Migrations
                     b.Property<DateTime>("Created_At")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Deleted_At")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Desc")
                         .HasMaxLength(2147483647)
                         .HasColumnType("nvarchar(max)");
@@ -303,6 +571,107 @@ namespace ECommerceApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("E_Commerce_Api.Models.ProductCategory_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Desc")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Modified_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductCategories_Archive");
+                });
+
+            modelBuilder.Entity("E_Commerce_Api.Models.Product_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Desc")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DiscountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Inventory_Archive")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Modified_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SKU")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products_Archive");
                 });
 
             modelBuilder.Entity("E_Commerce_Api.Models.ShoppingSession", b =>
@@ -330,6 +699,47 @@ namespace ECommerceApi.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ShoppingSessions");
+                });
+
+            modelBuilder.Entity("E_Commerce_Api.Models.ShoppingSession_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShoppingSessions_Archive");
                 });
 
             modelBuilder.Entity("E_Commerce_Api.Models.User", b =>
@@ -389,10 +799,50 @@ namespace ECommerceApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserAddresses");
+                });
+
+            modelBuilder.Entity("E_Commerce_Api.Models.UserAddress_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserAddresses_Archive");
                 });
 
             modelBuilder.Entity("E_Commerce_Api.Models.UserPayment", b =>
@@ -430,10 +880,117 @@ namespace ECommerceApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserPayments");
+                });
+
+            modelBuilder.Entity("E_Commerce_Api.Models.UserPayment_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CVV")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Card_Holder_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("Card_Number")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Expiration_Month")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Expiration_Year")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Payment_Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("User")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPayments_Archive");
+                });
+
+            modelBuilder.Entity("E_Commerce_Api.Models.User_Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeformedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Peformed_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Record_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telephone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users_Archive");
                 });
 
             modelBuilder.Entity("E_Commerce_Api.Models.CartItem", b =>
@@ -455,16 +1012,16 @@ namespace ECommerceApi.Migrations
                     b.Navigation("ShoppingSession");
                 });
 
-            modelBuilder.Entity("E_Commerce_Api.Models.OrderDetails", b =>
+            modelBuilder.Entity("E_Commerce_Api.Models.OrderDetail", b =>
                 {
-                    b.HasOne("E_Commerce_Api.Models.PaymentDetails", "PaymentDetails")
+                    b.HasOne("E_Commerce_Api.Models.PaymentDetail", "PaymentDetails")
                         .WithMany("OrderDetails")
                         .HasForeignKey("PaymentDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("E_Commerce_Api.Models.User", "User")
-                        .WithMany()
+                        .WithMany("OrderDetails")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -474,9 +1031,9 @@ namespace ECommerceApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("E_Commerce_Api.Models.OrderItems", b =>
+            modelBuilder.Entity("E_Commerce_Api.Models.OrderItem", b =>
                 {
-                    b.HasOne("E_Commerce_Api.Models.OrderDetails", "OrderDetails")
+                    b.HasOne("E_Commerce_Api.Models.OrderDetail", "OrderDetails")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -523,7 +1080,7 @@ namespace ECommerceApi.Migrations
             modelBuilder.Entity("E_Commerce_Api.Models.ShoppingSession", b =>
                 {
                     b.HasOne("E_Commerce_Api.Models.User", "User")
-                        .WithMany()
+                        .WithMany("ShoppingSessions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -534,8 +1091,8 @@ namespace ECommerceApi.Migrations
             modelBuilder.Entity("E_Commerce_Api.Models.UserAddress", b =>
                 {
                     b.HasOne("E_Commerce_Api.Models.User", "User")
-                        .WithOne("UserAddress")
-                        .HasForeignKey("E_Commerce_Api.Models.UserAddress", "UserId")
+                        .WithMany("UserAddresses")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -545,8 +1102,8 @@ namespace ECommerceApi.Migrations
             modelBuilder.Entity("E_Commerce_Api.Models.UserPayment", b =>
                 {
                     b.HasOne("E_Commerce_Api.Models.User", "User")
-                        .WithOne("UserPayment")
-                        .HasForeignKey("E_Commerce_Api.Models.UserPayment", "UserId")
+                        .WithMany("UserPayments")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -563,12 +1120,12 @@ namespace ECommerceApi.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("E_Commerce_Api.Models.OrderDetails", b =>
+            modelBuilder.Entity("E_Commerce_Api.Models.OrderDetail", b =>
                 {
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("E_Commerce_Api.Models.PaymentDetails", b =>
+            modelBuilder.Entity("E_Commerce_Api.Models.PaymentDetail", b =>
                 {
                     b.Navigation("OrderDetails");
                 });
@@ -592,11 +1149,13 @@ namespace ECommerceApi.Migrations
 
             modelBuilder.Entity("E_Commerce_Api.Models.User", b =>
                 {
-                    b.Navigation("UserAddress")
-                        .IsRequired();
+                    b.Navigation("OrderDetails");
 
-                    b.Navigation("UserPayment")
-                        .IsRequired();
+                    b.Navigation("ShoppingSessions");
+
+                    b.Navigation("UserAddresses");
+
+                    b.Navigation("UserPayments");
                 });
 #pragma warning restore 612, 618
         }

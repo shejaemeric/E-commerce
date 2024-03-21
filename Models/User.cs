@@ -15,8 +15,13 @@ namespace E_Commerce_Api.Models
             public DateTime Created_At { get; set; }
              public DateTime Modified_At { get; set; }
 
-            public UserAddress UserAddress { get; set;}
+            public ICollection<UserAddress> UserAddresses { get; set;}
 
-            public UserPayment UserPayment  { get; set;}
+            public ICollection< UserPayment> UserPayments  { get; set;}
+
+            public ICollection< ShoppingSession> ShoppingSessions { get; set;}
+
+            public ICollection< OrderDetail> OrderDetails  { get; set;}
+
     }
 }

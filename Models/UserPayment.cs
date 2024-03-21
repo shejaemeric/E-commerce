@@ -20,8 +20,6 @@ namespace E_Commerce_Api.Models
         public int? Expiration_Year { get; set; }
         public DateTime Created_At { get; set; }
 
-        // Foreign key property for the relationship with User
-        public int UserId { get; set; }
         public User User { get; set; }
 
     }

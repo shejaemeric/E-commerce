@@ -17,11 +17,10 @@ namespace E_Commerce_Api.Models
         public int Price { get; set; }
         public DateTime Created_At { get; set; }
         public DateTime Modified_At { get; set; }
-        public DateTime Deleted_At { get; set; }
 
         public ICollection<CartItem> CartItems { get; set; }
 
-        public ICollection<OrderItems> OrderItems { get; set; }
+        public ICollection<OrderItem> OrderItems { get; set; }
 
         public Discount Discount { get; set; }
 

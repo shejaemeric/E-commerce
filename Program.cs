@@ -4,6 +4,9 @@ using  E_Commerce_Api.Data;
 using  E_Commerce_Api.Seed;
 using  E_Commerce_Api;
 using Microsoft.EntityFrameworkCore;
+using E_Commerce_Api.Interfaces;
+using E_Commerce_Api.Repository;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,22 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ICartItemRepository,CartItemRepository>();
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+builder.Services.AddScoped<IInvetoryRepository,InvetoryRepository>();
+builder.Services.AddScoped<IPaymentDetailsRepository,PaymentDetailsRepository>();
+builder.Services.AddScoped<IOrderItemRepository,OrderItemRepository>();
+builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<IShoppingSessionRepository,ShoppingSessionRepository>();
+builder.Services.AddScoped<IOrderDetailRepository,OrderDetailRepository>();
+builder.Services.AddScoped<IUserAddressRepository,UserAddressRepository>();
+builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<IUserPaymentRepository,UserPaymentRepository>();
+builder.Services.AddScoped<IProductCategoryRepository,ProductCategoryRepository>();
+builder.Services.AddScoped<IProductRepository,ProductRepository>();
+
+
 
 builder.Services.AddDbContext<DataContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

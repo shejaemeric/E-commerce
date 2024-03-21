@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using E_Commerce_Api.Models;
+using System.Linq;
+using System.Data;
 
 namespace E_Commerce_Api.Data
 {
@@ -12,9 +14,9 @@ namespace E_Commerce_Api.Data
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
-        public DbSet<OrderDetails> OrderDetails { get; set; }
-        public DbSet<OrderItems> OrderItems { get; set; }
-        public DbSet<PaymentDetails> PaymentDetails { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<PaymentDetail> PaymentDetails { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<ShoppingSession> ShoppingSessions { get; set; }
@@ -22,23 +24,50 @@ namespace E_Commerce_Api.Data
         public DbSet<UserPayment> UserPayments { get; set; }
         public DbSet<User> Users { get; set; }
 
+        // Archives
+
+
+        public DbSet<CartItem_Archive> CartItems_Archive { get; set; }
+        public DbSet<Discount_Archive> Discounts_Archive { get; set; }
+        public DbSet<Inventory_Archive> Inventories_Archive { get; set; }
+        public DbSet<OrderDetail_Archive> OrderDetails_Archive { get; set; }
+        public DbSet<OrderItem_Archive> OrderItems_Archive { get; set; }
+        public DbSet<PaymentDetail_Archive> PaymentDetails_Archive { get; set; }
+        public DbSet<Product_Archive> Products_Archive { get; set; }
+        public DbSet<ProductCategory_Archive> ProductCategories_Archive { get; set; }
+        public DbSet<ShoppingSession_Archive> ShoppingSessions_Archive { get; set; }
+        public DbSet<UserAddress_Archive> UserAddresses_Archive { get; set; }
+        public DbSet<UserPayment_Archive> UserPayments_Archive { get; set; }
+        public DbSet<User_Archive> Users_Archive { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-                modelBuilder.Entity<User>()
-                .HasOne(u => u.UserAddress)
-                .WithOne(ua => ua.User)
-                .HasForeignKey<UserAddress>(ua => ua.UserId);
 
-                modelBuilder.Entity<User>()
-                .HasOne(u => u.UserPayment)
-                .WithOne(ua => ua.User)
-                .HasForeignKey<UserPayment>(up => up.UserId);
+                    // modelBuilder.Entity<User>()
+                    // .HasMany(u => u.UserAddresses)  // One User has many UserAddresses
+                    // .WithOne(ua => ua.User)         // Each UserAddress belongs to one User
+                    // .HasForeignKey(ua => ua.UserId);
+
+
+
+
 
                 modelBuilder.Entity<Discount>()
                 .Property(d => d.Discount_percent)
                 .HasColumnType("decimal(18, 2)"); // Adjust precision and scale as needed
 
                 modelBuilder.Entity<ShoppingSession>()
+                .Property(s => s.Total)
+                .HasColumnType("decimal(18, 2)");
+
+                // Archives
+
+
+            modelBuilder.Entity<Discount_Archive>()
+                .Property(d => d.Discount_percent)
+                .HasColumnType("decimal(18, 2)"); // Adjust precision and scale as needed
+
+            modelBuilder.Entity<ShoppingSession_Archive>()
                 .Property(s => s.Total)
                 .HasColumnType("decimal(18, 2)");
         }

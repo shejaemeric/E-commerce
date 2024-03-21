@@ -1,10 +1,10 @@
 
 using System.ComponentModel.DataAnnotations;
 
-
-namespace E_Commerce_Api.Models
+using E_Commerce_Api.Models;
+namespace E_Commerce_Api.Dto
 {
-    public class PaymentDetails
+    public class PaymentDetailsDto
     {
         public int Id{ get; set; }
 
@@ -18,14 +18,12 @@ namespace E_Commerce_Api.Models
 
         public string? Card_Holder_Name { get; set; }
 
-         public long? Card_Number { get; set; }
+        public long? Card_Number { get; set; }
         public int? CVV { get; set; }
         public int? Expiration_Month { get; set; }
         public int? Expiration_Year { get; set; }
         public DateTime Created_At { get; set; }
         public DateTime Modified_At { get; set; }
-
-        public ICollection<OrderDetails> OrderDetails { get; set; }
 
     }
 }

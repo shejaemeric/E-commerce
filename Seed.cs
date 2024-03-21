@@ -76,7 +76,7 @@ namespace E_Commerce_Api.Seed
                 Expiration_Month = 442,
                 Expiration_Year = 2026,
                 Created_At = DateTime.Now,
-                UserId = user.Id
+                User= user
             };
             var userPayment1 = new UserPayment
             {
@@ -87,7 +87,7 @@ namespace E_Commerce_Api.Seed
                 Expiration_Month = 1,
                 Expiration_Year = 2027,
                 Created_At = DateTime.Now,
-                UserId = user1.Id
+                User = user1
             };
             context.UserPayments.Add(userPayment);
             context.UserPayments.Add(userPayment1);
@@ -119,8 +119,7 @@ namespace E_Commerce_Api.Seed
                 Name = "Electronics",
                 Desc = "Electronics category description",
                 Created_At = DateTime.Now,
-                Modified_At = DateTime.Now,
-                Deleted_At = DateTime.Now
+                Modified_At = DateTime.Now
             };
             context.ProductCategories.Add(productCategory);
 
@@ -129,8 +128,7 @@ namespace E_Commerce_Api.Seed
                 Name = "Cleaning Supplies",
                 Desc = "Cleaning Supplies category description",
                 Created_At = DateTime.Now,
-                Modified_At = DateTime.Now,
-                Deleted_At = DateTime.Now
+                Modified_At = DateTime.Now
             };
             context.ProductCategories.Add(productCategory);
              context.ProductCategories.Add(productCategory1);
@@ -144,8 +142,7 @@ namespace E_Commerce_Api.Seed
                 Active = true,
                 Discount_percent = 10,
                 Created_At = DateTime.Now,
-                Modified_At = DateTime.Now,
-                Deleted_At = DateTime.Now
+                Modified_At = DateTime.Now
             };
 
             var discount1 = new Discount
@@ -155,8 +152,7 @@ namespace E_Commerce_Api.Seed
                 Active = false,
                 Discount_percent = 5,
                 Created_At = DateTime.Now,
-                Modified_At = DateTime.Now,
-                Deleted_At = DateTime.Now
+                Modified_At = DateTime.Now
             };
             context.Discounts.Add(discount);
              context.Discounts.Add(discount1);
@@ -167,15 +163,13 @@ namespace E_Commerce_Api.Seed
             {
                 Quantity = 200,
                 Created_At = DateTime.Now,
-                Modified_At = DateTime.Now,
-                Deleted_At = DateTime.Now
+                Modified_At = DateTime.Now
             };
             var inventory1 = new Inventory
             {
                 Quantity = 51,
                 Created_At = DateTime.Now,
-                Modified_At = DateTime.Now,
-                Deleted_At = DateTime.Now
+                Modified_At = DateTime.Now
             };
             context.Inventories.Add(inventory);
             context.Inventories.Add(inventory1);
@@ -190,7 +184,6 @@ namespace E_Commerce_Api.Seed
                 Price = 99,
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
-                Deleted_At = DateTime.Now,
                 ProductCategory = productCategory,
                 Discount = discount, // Assign the discount to the product
                 Inventory = inventory,
@@ -204,7 +197,6 @@ namespace E_Commerce_Api.Seed
                 Price = 39,
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
-                Deleted_At = DateTime.Now,
                 ProductCategory = productCategory1,
                 Discount = discount1, // Assign the discount to the product
                 Inventory = inventory1,
@@ -238,7 +230,7 @@ namespace E_Commerce_Api.Seed
             context.SaveChanges();
 
             // Seed PaymentDetails
-            var paymentDetails = new PaymentDetails
+            var paymentDetails = new PaymentDetail
             {
                 Amount = 100,
                 Status = "Paid",
@@ -252,7 +244,7 @@ namespace E_Commerce_Api.Seed
                 Modified_At = DateTime.Now
             };
 
-            var paymentDetails1 = new PaymentDetails
+            var paymentDetails1 = new PaymentDetail
             {
                 Amount = 100,
                 Status = "Paid",
@@ -270,7 +262,7 @@ namespace E_Commerce_Api.Seed
             context.SaveChanges();
 
             // Seed OrderDetails
-            var orderDetails = new OrderDetails
+            var orderDetails = new OrderDetail
             {
                 Total = 1,
                 Created_At = DateTime.Now,
@@ -278,7 +270,7 @@ namespace E_Commerce_Api.Seed
                 User = user,
                 PaymentDetails = paymentDetails
             };
-            var orderDetails1 = new OrderDetails
+            var orderDetails1 = new OrderDetail
             {
                 Total = 4,
                 Created_At = DateTime.Now,
@@ -291,7 +283,7 @@ namespace E_Commerce_Api.Seed
             context.SaveChanges();
 
             // Seed OrderItems
-            var orderItem = new OrderItems
+            var orderItem = new OrderItem
             {
                 Quantity = 1,
                 Created_At = DateTime.Now,
@@ -299,7 +291,7 @@ namespace E_Commerce_Api.Seed
                 Product = product,
                 OrderDetails = orderDetails
             };
-            var orderItem1 = new OrderItems
+            var orderItem1 = new OrderItem
             {
                 Quantity = 4,
                 Created_At = DateTime.Now,

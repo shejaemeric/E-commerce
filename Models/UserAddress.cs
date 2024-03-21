@@ -8,9 +8,7 @@ namespace E_Commerce_Api.Models
 
         public string? Country { get; set; }
         public string? City { get; set; }
-
-        // Foreign key property for the relationship with User
-        public int UserId { get; set; }
+        public int UserId { get; set; } // Foreign key property for the relationship with User
         public User User { get; set; }
     }
 }
