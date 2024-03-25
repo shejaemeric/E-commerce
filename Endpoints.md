@@ -1,55 +1,78 @@
-1. **User Management Endpoints**:
+### User Endpoints:
 
-   - Create a new user: `POST /api/users`
-   - Get user details: `GET /api/users/{id}`
-   - Update user details: `PUT /api/users/{id}`
-   - Delete a user: `DELETE /api/users/{id}`
-   - Get user's addresses: `GET /api/users/{userId}/addresses`
-   - Get user's payment methods: `GET /api/users/{userId}/payments`
+1. **Authentication**:
 
-2. **Product Management Endpoints**:
+   - `POST /api/auth/login`: Endpoint to log in users.
+   - `POST /api/auth/register`: Endpoint to register new users.
+   - `POST /api/auth/logout`: Endpoint to log out users.
+   - `POST /api/auth/reset-password`: Endpoint to request a password reset.
+   - `POST /api/auth/change-password`: Endpoint to change user's password.
 
-   - Create a new product: `POST /api/products`
-   - Get product details: `GET /api/products/{id}`
-   - Update product details: `PUT /api/products/{id}`
-   - Delete a product: `DELETE /api/products/{id}`
-   - Get all products: `GET /api/products`
-   - Get products by category: `GET /api/products?category={categoryId}`
-   - Get products on sale: `GET /api/products?onsale=true`
+2. **User Profile**:
 
-3. **Order Management Endpoints**:
+   - `GET /api/users/{id}`: Endpoint to get user profile by ID.
+   - `PUT /api/users/{id}`: Endpoint to update user profile.
 
-   - Create a new order: `POST /api/orders`
-   - Get order details: `GET /api/orders/{id}`
-   - Update order details: `PUT /api/orders/{id}`
-   - Cancel an order: `DELETE /api/orders/{id}`
-   - Get orders by user: `GET /api/orders?userId={userId}`
-   - Get orders by status: `GET /api/orders?status={status}`
+3. **Product Listing**:
 
-4. **Shopping Cart Endpoints**:
+   - `GET /api/products`: Endpoint to get all products.
+   - `GET /api/products/{id}`: Endpoint to get product details by ID.
 
-   - Add item to cart: `POST /api/cart`
-   - Get cart items: `GET /api/cart`
-   - Update cart item quantity: `PUT /api/cart/{itemId}`
-   - Remove item from cart: `DELETE /api/cart/{itemId}`
-   - Clear cart: `DELETE /api/cart`
+4. **Order Management**:
 
-5. **Payment Endpoints**:
+   - `GET /api/orders`: Endpoint to get user's orders.
+   - `GET /api/orders/{id}`: Endpoint to get order details by ID.
+   - `POST /api/orders`: Endpoint to place a new order.
+   - `PUT /api/orders/{id}`: Endpoint to update order details.
 
-   - Process payment: `POST /api/payments`
-   - Get payment details: `GET /api/payments/{id}`
-   - Update payment details: `PUT /api/payments/{id}`
-   - Cancel a payment: `DELETE /api/payments/{id}`
+5. **Cart Management**:
+   - `GET /api/cart`: Endpoint to get user's cart items.
+   - `POST /api/cart/add`: Endpoint to add a product to the user's cart.
+   - `PUT /api/cart/update/{id}`: Endpoint to update quantity of a product in the cart.
+   - `DELETE /api/cart/remove/{id}`: Endpoint to remove a product from the cart.
 
-6. **Inventory Management Endpoints**:
+### Manager Endpoints:
 
-   - Get product inventory: `GET /api/inventory/{productId}`
-   - Update product inventory: `PUT /api/inventory/{productId}`
-   - Adjust inventory quantity: `PATCH /api/inventory/{productId}`
+1. **Product Management**:
 
-7. **Category Management Endpoints**:
-   - Create a new category: `POST /api/categories`
-   - Get category details: `GET /api/categories/{id}`
-   - Update category details: `PUT /api/categories/{id}`
-   - Delete a category: `DELETE /api/categories/{id}`
-   - Get all categories: `GET /api/categories`
+   - `GET /api/manager/products`: Endpoint to get all products.
+   - `GET /api/manager/products/{id}`: Endpoint to get product details by ID.
+   - `POST /api/manager/products`: Endpoint to add a new product.
+   - `PUT /api/manager/products/{id}`: Endpoint to update product details.
+   - `DELETE /api/manager/products/{id}`: Endpoint to delete a product.
+
+2. **Order Management**:
+
+   - `GET /api/manager/orders`: Endpoint to get all orders.
+   - `GET /api/manager/orders/{id}`: Endpoint to get order details by ID.
+   - `PUT /api/manager/orders/{id}`: Endpoint to update order status.
+
+3. **Report Generation**:
+   - `GET /api/manager/reports/sales`: Endpoint to generate sales report.
+   - `GET /api/manager/reports/inventory`: Endpoint to generate inventory report.
+   - `GET /api/manager/reports/user-activity`: Endpoint to generate user activity report.
+
+### Admin Endpoints:
+
+1. **User Management**:
+
+   - `GET /api/admin/users`: Endpoint to get all users.
+   - `GET /api/admin/users/{id}`: Endpoint to get user details by ID.
+   - `POST /api/admin/users`: Endpoint to add a new user.
+   - `PUT /api/admin/users/{id}`: Endpoint to update user details.
+   - `DELETE /api/admin/users/{id}`: Endpoint to delete a user.
+
+2. **Discount Management**:
+
+   - `GET /api/admin/discounts`: Endpoint to get all discounts.
+   - `GET /api/admin/discounts/{id}`: Endpoint to get discount details by ID.
+   - `POST /api/admin/discounts`: Endpoint to add a new discount.
+   - `PUT /api/admin/discounts/{id}`: Endpoint to update discount details.
+   - `DELETE /api/admin/discounts/{id}`: Endpoint to delete a discount.
+
+3. **Category Management**:
+   - `GET /api/admin/categories`: Endpoint to get all categories.
+   - `GET /api/admin/categories/{id}`: Endpoint to get category details by ID.
+   - `POST /api/admin/categories`: Endpoint to add a new category.
+   - `PUT /api/admin/categories/{id}`: Endpoint to update category details.
+   - `DELETE /api/admin/categories/{id}`: Endpoint to delete a category.
