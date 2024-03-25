@@ -1,13 +1,16 @@
 
 using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace E_Commerce_Api.Models
 {
     public class ProductCategory_Archive
     {
 
+        [Key]
         public int Id{ get; set; }
+
+        public int Archive_Id{ get; set; }
 
         [Required]
         public string Name{ get; set; }

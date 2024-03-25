@@ -14,6 +14,8 @@ namespace E_Commerce_Api.Dto
 
         public string? SKU { get; set; }
         public int Price { get; set; }
+
+        public bool In_stock { get; set; }
         public DateTime Created_At { get; set; }
         public DateTime Modified_At { get; set; }
 

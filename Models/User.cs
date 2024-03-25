@@ -12,8 +12,16 @@ namespace E_Commerce_Api.Models
           public string Name { get; set; }
 
            public string Telephone { get; set; }
+
+
+        public bool Is_active { get; set; }
+        public DateTime Last_login { get; set; }
             public DateTime Created_At { get; set; }
              public DateTime Modified_At { get; set; }
+
+             public ICollection<PasswordResetToken> PasswordResetTokens { get; set; }
+
+             public ICollection<UserRole> UserRoles { get; set; }
 
             public ICollection<UserAddress> UserAddresses { get; set;}
 

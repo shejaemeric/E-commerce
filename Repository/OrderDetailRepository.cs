@@ -41,6 +41,21 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
+        public string DeleteOrderDetail(int orderDetailId, int actionPeformerId, string referenceId)
+        {
+                            try    {
+            string query = " Exec  [dbo].[deleteOrderDetail] "  + orderDetailId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+
+                return cmd.ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
         public ICollection<OrderDetail> GetAllOrderByUser(int userId)
         {
             return _context.OrderDetails.Where(od => od.User.Id == userId).Include(p=>p.PaymentDetails).ToList();
@@ -63,7 +78,7 @@ namespace E_Commerce_Api.Repository
 
         public bool UpdateOrderDetail( int userId, int paymentDetailId, OrderDetail orderDetail)
         {
-                        var paymentDetail = _context.PaymentDetails.Find(paymentDetailId);
+            var paymentDetail = _context.PaymentDetails.Find(paymentDetailId);
 
             if ( paymentDetail == null) {
                 return false;

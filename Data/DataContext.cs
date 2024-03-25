@@ -23,6 +23,12 @@ namespace E_Commerce_Api.Data
         public DbSet<UserAddress> UserAddresses { get; set; }
         public DbSet<UserPayment> UserPayments { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<UserRole> UsersRoles { get; set; }
+        public DbSet<RolePermission> RolesPermissions { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
 
         // Archives
 
@@ -39,6 +45,12 @@ namespace E_Commerce_Api.Data
         public DbSet<UserAddress_Archive> UserAddresses_Archive { get; set; }
         public DbSet<UserPayment_Archive> UserPayments_Archive { get; set; }
         public DbSet<User_Archive> Users_Archive { get; set; }
+
+        public DbSet<Role_Archive> Roles_Archive { get; set; }
+        public DbSet<Permission_Archive> Permissions_Archive { get; set; }
+        public DbSet<UserRole_Archive> UsersRoles_Archive { get; set; }
+        public DbSet<RolePermission_Archive> RolesPermissions_Archive { get; set; }
+        public DbSet<PasswordResetToken_Archive> PasswordResetTokens_Archive { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

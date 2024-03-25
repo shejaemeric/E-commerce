@@ -1,10 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace E_Commerce_Api.Models
 {
     public class OrderDetail_Archive
     {
+        [Key]
         public int Id{ get; set; }
 
+        public int Archive_Id{ get; set; }
+
         public int Total{ get; set; }
+
+        public  string Status { get; set; }
 
         public DateTime Created_At { get; set; }
         public DateTime Modified_At { get; set; }

@@ -1,0 +1,164 @@
+Table cart_items {
+  id int [pk]
+  quantity int
+  subtotal decimal
+  created_at datetime
+  modified_at datetime
+  product_id int [ref: > products.id]
+  shopping_session_id int [ref: > shopping_sessions.id]
+}
+
+Table discounts {
+  id int [pk]
+  name varchar [not null]
+  desc text
+  active bool
+  discount_percent decimal
+  created_at datetime
+  modified_at datetime
+}
+
+Table inventories {
+  id int [pk]
+  quantity int
+  created_at datetime
+  modified_at datetime
+}
+
+Table order_details {
+  id int [pk]
+  total int
+  created_at datetime
+  modified_at datetime
+  status varchar
+  user_id int [ref: > users.id]
+  payment_detail_id int [ref: > payment_details.id]
+}
+
+Table order_items {
+  id int [pk]
+  quantity int
+  created_at datetime
+  modified_at datetime
+  order_detail_id int [ref: > order_details.id]
+  product_id int [ref: > products.id]
+}
+
+Table payment_details {
+  id int [pk]
+  amount int
+  status varchar [not null]
+  payment_type varchar [not null]
+  card_holder_name varchar
+  card_number bigint
+  cvv int
+  expiration_month int
+  expiration_year int
+  created_at datetime
+  modified_at datetime
+}
+
+Table products {
+  id int [pk]
+  name varchar [not null]
+  desc text
+  sku varchar
+  price int
+  created_at datetime
+  modified_at datetime
+  in_stock bool
+  discount_id int [ref: < discounts.id]
+  inventory_id int [ref: < inventories.id]
+  product_category_id int [ref: < product_categories.id]
+
+}
+
+Table product_categories {
+  id int [pk]
+  name varchar [not null]
+  desc text
+  created_at datetime
+  modified_at datetime
+}
+
+Table shopping_sessions {
+  id int [pk]
+  total decimal
+  created_at datetime
+  modified_at datetime
+  user_id int [ref: > users.id]
+}
+Table roles {
+  id int [pk]
+  name varchar [unique]
+  description varchar [not null]
+}
+
+Table permissions {
+  id int [pk]
+  name varchar [unique]
+  description varchar [not null]
+}
+
+Table role_permissions {
+  id int [pk]
+  permission_id int [ref: > permissions.id]
+  role_id int [ref: > roles.id]
+}
+
+Table user_roles {
+  id int [pk]
+  user_id int [ref: > users.id]
+  role_id int [ref: > roles.id]
+}
+
+Table users {
+  id int [pk]
+  username varchar
+  password varchar
+  name varchar
+  telephone varchar
+  is_active bool
+  last_login datetime
+  created_at datetime
+  modified_at datetime
+}
+
+Table user_addresses {
+  id int [pk]
+  address varchar
+  country varchar
+  city varchar
+  user_id int [ref: > users.id]
+}
+
+Table user_payments {
+  id int [pk]
+  payment_type varchar [not null]
+  card_holder_name varchar
+  card_number bigint
+  cvv int
+  expiration_month int
+  expiration_year int
+  created_at datetime
+  user_id int [ref: > users.id]
+}
+
+Table password_reset_tokens {
+  id int [pk]
+  user_id int [ref: > users.id]
+  token varchar [unique]
+  expiration datetime
+  created_at datetime
+}
+
+Table audit_logs {
+  LogID int [pk]
+  UserID int [ref: > users.id]
+  ActivityType varchar
+  Timestamp datetime
+  Description text
+}
+
+
+

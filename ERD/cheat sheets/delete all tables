@@ -1,0 +1,9 @@
+DECLARE @sql NVARCHAR(MAX) = N'';
+
+-- Generate DROP TABLE statements for each table in the database
+SELECT @sql += N'DROP TABLE ' + QUOTENAME(s.name) + N'.' + QUOTENAME(t.name) + N';' + CHAR(13) + CHAR(10)
+FROM sys.tables AS t
+INNER JOIN sys.schemas AS s ON t.schema_id = s.schema_id;
+
+-- Execute the generated SQL
+EXEC sp_executesql @sql;

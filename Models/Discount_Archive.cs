@@ -1,12 +1,15 @@
 
 using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_Commerce_Api.Models
 {
     public class Discount_Archive
     {
+
         public int Id{ get; set; }
+
+        public int Archive_Id{ get; set; }
 
         [Required]
         public string Name{ get; set; }

@@ -19,6 +19,11 @@ namespace E_Commerce_Api.helpers {
             CreateMap<CartItem, CartItemDto>().ReverseMap();
             CreateMap<PaymentDetail, PaymentDetailsDto>().ReverseMap();
             CreateMap<OrderItem,CreateOrderItemsDto>().ReverseMap();
+            CreateMap<Permission, PermissionDto>().ReverseMap();
+            CreateMap<Role,RoleDto>().ReverseMap();
+            CreateMap<RolePermission, RolePermissionDto>().ReverseMap();
+            CreateMap<UserRole, UserRoleDto>().ReverseMap();
+            CreateMap<PasswordResetToken, PasswordResetTokenDto>().ReverseMap();
 
         }
     }

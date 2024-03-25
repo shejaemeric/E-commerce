@@ -1,9 +1,15 @@
+
+using System.ComponentModel.DataAnnotations;
 namespace E_Commerce_Api.Models
 {
+
     public class Inventory_Archive
     {
+        [Key]
 
         public int Id{ get; set; }
+
+        public int Archive_Id{ get; set; }
 
         public int Quantity{ get; set; }
 

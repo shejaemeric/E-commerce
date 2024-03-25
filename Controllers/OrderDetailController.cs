@@ -138,5 +138,21 @@ namespace E_Commerce_Api.Controllers
             }
             return NoContent();
         }
+
+        [HttpDelete("{orderDetailId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteOrderDetails(int orderDetailId,[FromQuery] int userId) {
+            if(!_orderDetailRepository.CheckIfOrderDetailExist(orderDetailId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            var str = _orderDetailRepository.DeleteOrderDetail(orderDetailId, userId, referenceId);
+            return Ok(str);
+         }
     }
 }

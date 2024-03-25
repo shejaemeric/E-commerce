@@ -4,6 +4,8 @@ using E_Commerce_Api.Models;
 using E_Commerce_Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualBasic;
+using System.Net.NetworkInformation;
 
 namespace E_Commerce_Api.Seed
 {
@@ -22,6 +24,135 @@ namespace E_Commerce_Api.Seed
                 return;   // Database has been seeded
             }
 
+            //Seed roles
+
+            var roles = new[]
+            {
+                new Role { Name = "admin", Description = "Administrator" },
+                new Role { Name = "manager", Description = "Manager" },
+                new Role { Name = "user", Description = "User" }
+            };
+
+            context.Roles.AddRange(roles);
+            context.SaveChanges();
+
+            //add permissions
+
+            var permissions = new[]
+            {
+              // Customer/Normal User Permissions
+                new Permission { Name = "view_products", Description = "Allows browsing and viewing available products." },
+                new Permission { Name = "add_to_cart", Description = "Enables adding products to the shopping cart." },
+                new Permission { Name = "place_order", Description = "Grants the ability to place orders for products." },
+                new Permission { Name = "manage_account", Description = "Allows users to view and modify their account details." },
+
+                // Manager Permissions
+                new Permission { Name = "add_product", Description = "Permission to add new products to the inventory." },
+                new Permission { Name = "edit_product", Description = "Permission to edit existing product details." },
+                new Permission { Name = "delete_product", Description = "Permission to delete products from the inventory." },
+                new Permission { Name = "manage_orders", Description = "Grants access to view, modify, and manage orders." },
+                new Permission { Name = "view_payments", Description = "Allows viewing payment details." },
+                new Permission { Name = "update_order_status", Description = "Permission to update the status of orders." },
+
+                // Admin Permissions
+                new Permission { Name = "manage_users", Description = "Allows adding, editing, and deleting user accounts." },
+                new Permission { Name = "manage_products", Description = "Enables adding, editing, and deleting products from the inventory." },
+                new Permission { Name = "manage_orders_admin", Description = "Grants the ability to view, modify, and manage orders." },
+                new Permission { Name = "manage_payments", Description = "Allows managing payment details, such as viewing, editing, or deleting payments." },
+                new Permission { Name = "manage_settings", Description = "Allows modifying system settings and configurations." },
+                new Permission { Name = "view_reports", Description = "Permission to access and generate reports on user activity, sales, etc." },
+                new Permission { Name = "update_inventory", Description = "Permission to update inventory levels for products." },
+                new Permission { Name = "manage_discounts", Description = "Permission to manage discounts, including adding, editing, or deleting discounts." },
+                new Permission { Name = "manage_categories", Description = "Allows managing product categories, such as adding, editing, or deleting categories." }
+        };
+
+            context.Permissions.AddRange(permissions);
+            context.SaveChanges();
+
+            var RolePermissions = new[] {
+            new RolePermission{
+                Permission = permissions[0],
+                Role = roles[0],
+             },
+            new RolePermission {
+                Permission = permissions[1],
+                Role = roles[0],
+            },
+            new RolePermission {
+                Permission = permissions[2],
+                Role = roles[0],
+            },
+            new RolePermission {
+                Permission = permissions[3],
+                Role = roles[0],
+            },
+
+
+            new RolePermission{
+                Permission = permissions[4],
+                Role = roles[1],
+             },
+            new RolePermission {
+                Permission = permissions[5],
+                Role = roles[1],
+            },
+            new RolePermission {
+                Permission = permissions[6],
+                Role = roles[1],
+            },
+            new RolePermission {
+                Permission = permissions[7],
+                Role = roles[1],
+            },new RolePermission{
+                Permission = permissions[8],
+                Role = roles[1],
+             },
+            new RolePermission {
+                Permission = permissions[9],
+                Role = roles[1],
+            },
+
+            //
+            new RolePermission{
+                Permission = permissions[10],
+                Role = roles[2],
+             },
+            new RolePermission {
+                Permission = permissions[11],
+                Role = roles[2],
+            },
+            new RolePermission {
+                Permission = permissions[12],
+                Role = roles[2],
+            },
+            new RolePermission {
+                Permission = permissions[13],
+                Role = roles[2],
+            },new RolePermission{
+                Permission = permissions[14],
+                Role = roles[2],
+             },
+            new RolePermission {
+                Permission = permissions[15],
+                Role = roles[2],
+            },
+            new RolePermission {
+                Permission = permissions[16],
+                Role = roles[2],
+            },new RolePermission{
+                Permission = permissions[17],
+                Role = roles[2],
+             },
+            new RolePermission {
+                Permission = permissions[18],
+                Role = roles[2],
+            },
+        };
+
+            context.RolesPermissions.AddRange(RolePermissions);
+            context.SaveChanges();
+
+
             // Seed Users
             var user = new User
             {
@@ -30,7 +161,9 @@ namespace E_Commerce_Api.Seed
                 Name = "John Doe",
                 Telephone = "+250784339373",
                 Created_At = DateTime.Now,
-                Modified_At = DateTime.Now
+                Modified_At = DateTime.Now,
+                Is_active = true,
+                Last_login = DateTime.Now
             };
 
             var user1 = new User
@@ -40,11 +173,41 @@ namespace E_Commerce_Api.Seed
                 Name = "John Doe",
                 Telephone = "+250786219583",
                 Created_At = DateTime.Now,
-                Modified_At = DateTime.Now
+                Modified_At = DateTime.Now,
+                Is_active = true,
+                Last_login = DateTime.Now
             };
             context.Users.Add(user);
             context.Users.Add(user1);
             context.SaveChanges();
+
+            // Seed UserRoles
+            var userRoles = new[]
+            {
+                new UserRole { UserId = user.Id, RoleId = roles.Single(r => r.Name == "user").Id },
+                new UserRole { UserId = user1.Id, RoleId = roles.Single(r => r.Name == "user").Id }
+            };
+
+            context.UsersRoles.AddRange(userRoles);
+            context.SaveChanges();
+
+
+            // Seed password reset
+
+            var resetTokens = new[] {
+            new PasswordResetToken{
+                User = user,
+                Token=" eyJjbGllbnRfaWQiOiJZekV6TUdkb01ISm5PSEJpT0cxaWJEaHlOVEE9IiwicmVzcG9uc2VfdHlwZSI6ImNvZGUiLCJzY29wZSI6ImludHJvc2NwZWN0X3Rva2VucywgcmV2b2tlX3Rva2VucyIsImlzcyI6ImJqaElSak0xY1hwYWEyMXpkV3RJU25wNmVqbE1iazQ0YlRsTlpqazNkWEU9Iiwic3ViIjoiWXpFek1HZG9NSEpuT0hCaU9HMWliRGh5TlRBPSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0Ojg0NDMve3RpZH0ve2FpZH0vb2F1dGgyL2F1dGhvcml6ZSIsImp0aSI6IjE1MTYyMzkwMjIiLCJleHAiOiIyMDIxLTA1LTE3VDA3OjA5OjQ4LjAwMCswNTQ1In0",
+                Expiration = DateTime.Now.AddDays(1),
+                Created_At = DateTime.Now
+            },
+            new PasswordResetToken{
+                User = user1,
+                Token=" eyJjbGllbnRfaWQiOiJZekV6TUdkb01ISm5PSEJpT0cxaWJEaHlOVEE9IiwicmVzcG9uc2VfdHlwZSI6ImNvZGUiLCJzY29wZSI6ImludHJvc2NwZWN0X3Rva2VucywgcmV2b2tlX3Rva2VucyIsImlzcyI6ImJqaElSak0xY1hwYWEyMXpkV3RJU25wNmVqbE1iazQ0YlRsTlpqazNkWEU9Iiwic3ViIjoiWXpFek1HZG9NSEpuT0hCaU9HMWliRGh5TlRBPSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0Ojg0NDMve3RpZH0ve2FpZH0vb2F1dGgyL2F1dGhvcml6ZSIsImp0aSI6IjE1MTYyMzkwMjIiLCJleHAiOiIyMDIxLTA1LTE3VDA3OjA5OjQ4LjAwMCswNTQ1In0",
+                Expiration = DateTime.Now.AddDays(1),
+                Created_At = DateTime.Now
+            }
+        };
 
             // Seed UserAddress
             var userAddress = new UserAddress
@@ -187,6 +350,7 @@ namespace E_Commerce_Api.Seed
                 ProductCategory = productCategory,
                 Discount = discount, // Assign the discount to the product
                 Inventory = inventory,
+                In_stock = true
             };
 
             var product1 = new Product
@@ -200,6 +364,7 @@ namespace E_Commerce_Api.Seed
                 ProductCategory = productCategory1,
                 Discount = discount1, // Assign the discount to the product
                 Inventory = inventory1,
+                In_stock = true
             };
             context.Products.Add(product);
              context.Products.Add(product1);
@@ -214,7 +379,8 @@ namespace E_Commerce_Api.Seed
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
                 Product = product,
-                ShoppingSession = shoppingSession
+                ShoppingSession = shoppingSession,
+                Sub_total=100
             };
 
             var cartItem1 = new CartItem
@@ -223,7 +389,8 @@ namespace E_Commerce_Api.Seed
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
                 Product = product1,
-                ShoppingSession = shoppingSession1
+                ShoppingSession = shoppingSession1,
+                Sub_total=20
             };
             context.CartItems.Add(cartItem);
             context.CartItems.Add(cartItem1);
@@ -268,7 +435,8 @@ namespace E_Commerce_Api.Seed
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
                 User = user,
-                PaymentDetails = paymentDetails
+                PaymentDetails = paymentDetails,
+                Status = "completed"
             };
             var orderDetails1 = new OrderDetail
             {
@@ -276,7 +444,8 @@ namespace E_Commerce_Api.Seed
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
                 User = user1,
-                PaymentDetails = paymentDetails1
+                PaymentDetails = paymentDetails1,
+                Status = "pending"
             };
             context.OrderDetails.Add(orderDetails);
             context.OrderDetails.Add(orderDetails1);

@@ -5,7 +5,10 @@ namespace E_Commerce_Api.Models
 {
     public class Product_Archive
     {
+        [Key]
         public int Id{ get; set; }
+
+        public int Archive_Id{ get; set; }
 
         [Required]
         public string Name{ get; set; }
@@ -15,6 +18,7 @@ namespace E_Commerce_Api.Models
 
         public string? SKU { get; set; }
         public int Price { get; set; }
+        public bool In_stock { get; set; }
         public DateTime Created_At { get; set; }
         public DateTime Modified_At { get; set; }
 

@@ -7,7 +7,10 @@ namespace E_Commerce_Api.Models
     public class UserPayment_Archive
     {
 
+        [Key]
         public int Id{ get; set; }
+
+        public int Archive_Id{ get; set; }
 
         [Required]
         public string Payment_Type{ get; set; }
@@ -20,7 +23,7 @@ namespace E_Commerce_Api.Models
         public int? Expiration_Year { get; set; }
         public DateTime Created_At { get; set; }
         public int UserId { get; set; } // Foreign key property for the relationship with User
-        public int User { get; set; }
+        public User User { get; set; }
 
 
         public string Action { get; set; }

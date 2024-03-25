@@ -14,6 +14,9 @@ namespace E_Commerce_Api.Interfaces
 
         ICollection<UserPayment> GetAllUserPaymentsByUser(int userId);
 
+        public ICollection<User> GetAllUsersByRole(int roleId);
+
+        public ICollection<User> GetAllUsersByPermission(int permissionId);
         User GetOneUsers(int userId);
 
         bool CheckIfUserExist(int userId);

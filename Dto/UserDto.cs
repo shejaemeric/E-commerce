@@ -11,6 +11,9 @@ namespace E_Commerce_Api.Dto
           public string Name { get; set; }
 
            public string Telephone { get; set; }
+
+            public bool Is_active { get; set; }
+            public DateTime Last_login { get; set; }
             public DateTime Created_At { get; set; }
              public DateTime Modified_At { get; set; }
     }

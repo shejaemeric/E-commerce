@@ -1,10 +1,14 @@
 
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace E_Commerce_Api.Models
 {
     public class OrderItem_Archive
     {
+
         public int Id{ get; set; }
+        public int Archive_Id{ get; set; }
 
         public int Quantity{ get; set; }
 

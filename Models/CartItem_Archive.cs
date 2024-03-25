@@ -1,13 +1,18 @@
 
+
 namespace E_Commerce_Api.Models
 {
     public class CartItem_Archive
     {
+
         public int Id{ get; set; }
+        public int Archive_Id{ get; set; }
 
         public int Quantity{ get; set; }
         public DateTime Created_At { get; set; }
         public DateTime Modified_At { get; set; }
+
+        public decimal Sub_total{ get; set; }
 
         public int Product_Id { get; set; }
 

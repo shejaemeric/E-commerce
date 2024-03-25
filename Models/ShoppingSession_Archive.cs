@@ -1,10 +1,13 @@
 
-
+using System.ComponentModel.DataAnnotations;
 namespace E_Commerce_Api.Models
 {
     public class ShoppingSession_Archive
     {
+        [Key]
         public int Id{ get; set; }
+
+        public int Archive_Id{ get; set; }
         public decimal Total{ get; set; }
 
         public DateTime Created_At { get; set; }

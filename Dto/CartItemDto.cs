@@ -5,7 +5,7 @@ namespace E_Commerce_Api.Dto
     public class CartItemDto
     {
         public int Id{ get; set; }
-
+        public decimal Sub_total{ get; set; }
         public int Quantity{ get; set; }
         public DateTime Created_At { get; set; }
         public DateTime Modified_At { get; set; }

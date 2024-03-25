@@ -1,9 +1,12 @@
-
+using System.ComponentModel.DataAnnotations;
 namespace E_Commerce_Api.Models
 {
     public class UserAddress_Archive
     {
+        [Key]
         public int Id{ get; set; }
+
+        public int Archive_Id{ get; set; }
         public string? Address { get; set; }
 
         public string? Country { get; set; }
