@@ -13,7 +13,9 @@ public interface ICartItemRepository
         CartItem GetOneCartItem(int cartItemId);
         bool CheckIfCartItemExist(int cartItemId);
         bool CreateCartItem(int productId,int shoppingSessionId,CartItem cartItem);
-        bool UpdateCartItem(int productId,int shoppingSessionId,CartItem cartItem);
+        bool UpdateCartItem(int productId,int shoppingSessionId,CartItem cartItem,int actionPeformerId, string referenceId);
+
+        bool DeleteCartItem(int cartItemId, int actionPeformerId, string referenceId);
         bool Save();
 }
 }

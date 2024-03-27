@@ -17,7 +17,8 @@ namespace E_Commerce_Api.Interfaces
 
         bool CreateProductCategory(ProductCategory productCategory);
 
-        bool UpdateProductCategory(ProductCategory productCategory);
+        bool UpdateProductCategory(ProductCategory productCategory,int actionPeformerId, string referenceId);
+        bool DeleteProductCategory(int productCategoryId, int actionPeformerId, string referenceId);
         bool Save();
     }
 }

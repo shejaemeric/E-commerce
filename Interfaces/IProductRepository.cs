@@ -20,7 +20,9 @@ namespace E_Commerce_Api.Interfaces
         bool CheckIfProductExist(int productId);
         bool CreateProduct(int discountId,int inventoryId,int productCategoryId,Product product);
 
-         bool UpdateProduct(int discountId,int inventoryId,int productCategoryId,Product product);
+         bool UpdateProduct(int discountId,int inventoryId,int productCategoryId,Product product,int actionPeformerId, string referenceId);
+
+         bool DeleteProduct(int productId, int actionPeformerId, string referenceId);
         bool Save();
     }
 }

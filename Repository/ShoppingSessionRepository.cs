@@ -34,6 +34,20 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
+        public bool DeleteShoppingSession(int shoppingSessionId, int actionPeformerId, string referenceId)
+        {
+                try    {
+                string query = " Exec  [dbo].[proc_deleteShoppingSession] "  + shoppingSessionId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                    var cmd = _context.Database.ExecuteSqlRaw(query);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return false;
+            }
+        }
+
         public ShoppingSession GetLatestShoppingSessionByUser(int userId)
         {
             return _context.ShoppingSessions.Where(c => c.User.Id == userId).OrderByDescending(ss => ss.Modified_At).FirstOrDefault();
@@ -43,16 +57,28 @@ namespace E_Commerce_Api.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool UpdateShoppingSession( int userId, ShoppingSession shoppingSession)
+        public bool UpdateShoppingSession( int userId, ShoppingSession shoppingSession,int actionPeformerId, string referenceId)
         {
             var user = _context.Users.Find(userId);
             if (user == null) {
                 return false;
             }
 
-            shoppingSession.User = user;
-            _context.Update(shoppingSession);
-            return Save();
+            try  {
+                string query = " Exec  [dbo].[proc_updateShoppingSession] "  + shoppingSession.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+
+                shoppingSession.User = user;
+                _context.Update(shoppingSession);
+                return Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
+
         }
     }
 }

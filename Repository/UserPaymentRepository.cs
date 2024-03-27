@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using E_Commerce_Api.Models;
 using E_Commerce_Api.Data;
 using E_Commerce_Api.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce_Api.Repository
 {
@@ -47,16 +48,39 @@ namespace E_Commerce_Api.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool UpdateUserPayment( int userId, UserPayment userPayment)
+        public bool UpdateUserPayment( int userId, UserPayment userPayment,int actionPeformerId, string referenceId)
         {
             var user = _context.Users.Find(userId);
             if (user == null) {
                 return false;
             }
+            try  {
+                string query = " Exec  [dbo].[proc_updateUserPayment] "  + userPayment.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                userPayment.User = user;
+                _context.Update(userPayment);
+                return Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
 
-            userPayment.User = user;
-            _context.Update(userPayment);
-            return Save();
+        }
+
+        public bool DeleteUserPayment(int paymentId, int actionPeformerId, string referenceId)
+        {
+            try {
+                string query = " Exec  [dbo].[proc_deleteUserPayment] "  + paymentId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
     }
 }

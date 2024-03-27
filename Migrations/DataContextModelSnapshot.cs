@@ -46,7 +46,7 @@ namespace ECommerceApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Sub_total")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("Id");
 
@@ -100,7 +100,7 @@ namespace ECommerceApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Sub_total")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("Id");
 
@@ -461,6 +461,9 @@ namespace ECommerceApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Archive_Id")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Created_At")
                         .HasColumnType("datetime2");
 
@@ -487,8 +490,6 @@ namespace ECommerceApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("PasswordResetTokens_Archive");
                 });
@@ -635,6 +636,9 @@ namespace ECommerceApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Archive_Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -672,16 +676,17 @@ namespace ECommerceApi.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Desc")
+                        .IsRequired()
                         .HasMaxLength(2147483647)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DiscountId")
+                    b.Property<int?>("DiscountId")
                         .HasColumnType("int");
 
                     b.Property<bool>("In_stock")
                         .HasColumnType("bit");
 
-                    b.Property<int>("InventoryId")
+                    b.Property<int?>("InventoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Modified_At")
@@ -694,10 +699,11 @@ namespace ECommerceApi.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductCategoryId")
+                    b.Property<int?>("ProductCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("SKU")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -880,24 +886,14 @@ namespace ECommerceApi.Migrations
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Permission_ArchiveId")
-                        .HasColumnType("int");
-
                     b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Role_ArchiveId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PermissionId");
 
-                    b.HasIndex("Permission_ArchiveId");
-
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("Role_ArchiveId");
 
                     b.ToTable("RolesPermissions");
                 });
@@ -913,6 +909,9 @@ namespace ECommerceApi.Migrations
                     b.Property<string>("Action")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Archive_Id")
+                        .HasColumnType("int");
 
                     b.Property<int>("PeformedById")
                         .HasColumnType("int");
@@ -934,10 +933,6 @@ namespace ECommerceApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("RoleId");
-
                     b.ToTable("RolesPermissions_Archive");
                 });
 
@@ -952,6 +947,9 @@ namespace ECommerceApi.Migrations
                     b.Property<string>("Action")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Archive_Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1271,17 +1269,12 @@ namespace ECommerceApi.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Role_ArchiveId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("Role_ArchiveId");
 
                     b.HasIndex("UserId");
 
@@ -1299,6 +1292,9 @@ namespace ECommerceApi.Migrations
                     b.Property<string>("Action")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Archive_Id")
+                        .HasColumnType("int");
 
                     b.Property<int>("PeformedById")
                         .HasColumnType("int");
@@ -1319,10 +1315,6 @@ namespace ECommerceApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("UsersRoles_Archive");
                 });
@@ -1455,35 +1447,24 @@ namespace ECommerceApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("E_Commerce_Api.Models.PasswordResetToken_Archive", b =>
-                {
-                    b.HasOne("E_Commerce_Api.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("E_Commerce_Api.Models.Product", b =>
                 {
                     b.HasOne("E_Commerce_Api.Models.Discount", "Discount")
                         .WithMany("Products")
                         .HasForeignKey("DiscountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("E_Commerce_Api.Models.Inventory", "Inventory")
                         .WithMany("Products")
                         .HasForeignKey("InventoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("E_Commerce_Api.Models.ProductCategory", "ProductCategory")
                         .WithMany("Products")
                         .HasForeignKey("ProductCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Discount");
@@ -1501,35 +1482,8 @@ namespace ECommerceApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Commerce_Api.Models.Permission_Archive", null)
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("Permission_ArchiveId");
-
                     b.HasOne("E_Commerce_Api.Models.Role", "Role")
                         .WithMany("RolePermissions")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("E_Commerce_Api.Models.Role_Archive", null)
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("Role_ArchiveId");
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("E_Commerce_Api.Models.RolePermission_Archive", b =>
-                {
-                    b.HasOne("E_Commerce_Api.Models.Permission", "Permission")
-                        .WithMany()
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("E_Commerce_Api.Models.Role", "Role")
-                        .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1591,31 +1545,8 @@ namespace ECommerceApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Commerce_Api.Models.Role_Archive", null)
-                        .WithMany("UserRoles")
-                        .HasForeignKey("Role_ArchiveId");
-
                     b.HasOne("E_Commerce_Api.Models.User", "User")
                         .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("E_Commerce_Api.Models.UserRole_Archive", b =>
-                {
-                    b.HasOne("E_Commerce_Api.Models.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("E_Commerce_Api.Models.User", "User")
-                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1650,11 +1581,6 @@ namespace ECommerceApi.Migrations
                     b.Navigation("RolePermissions");
                 });
 
-            modelBuilder.Entity("E_Commerce_Api.Models.Permission_Archive", b =>
-                {
-                    b.Navigation("RolePermissions");
-                });
-
             modelBuilder.Entity("E_Commerce_Api.Models.Product", b =>
                 {
                     b.Navigation("CartItems");
@@ -1668,13 +1594,6 @@ namespace ECommerceApi.Migrations
                 });
 
             modelBuilder.Entity("E_Commerce_Api.Models.Role", b =>
-                {
-                    b.Navigation("RolePermissions");
-
-                    b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("E_Commerce_Api.Models.Role_Archive", b =>
                 {
                     b.Navigation("RolePermissions");
 

@@ -16,11 +16,13 @@ namespace E_Commerce_Api.Controllers
     public class InventoryController : ControllerBase
     {
         private readonly IInvetoryRepository _inventoryRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public InventoryController(IInvetoryRepository inventoryRepository,IMapper mapper)
+        public InventoryController(IInvetoryRepository inventoryRepository,IMapper mapper,IUserRepository userRepository)
         {
             _inventoryRepository = inventoryRepository;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
         [HttpPost()]
@@ -58,7 +60,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateInventory(int inventoryId,[FromBody] InventoryDto inventoryUpdate)
+        public IActionResult UpdateInventory(int inventoryId,[FromBody] InventoryDto inventoryUpdate,[FromQuery] int actionPeformerId)
         {
             if (inventoryUpdate == null)
                 return BadRequest(ModelState);
@@ -74,7 +76,10 @@ namespace E_Commerce_Api.Controllers
 
             var inventoryMap = _mapper.Map<Inventory>(inventoryUpdate);
 
-            if (!_inventoryRepository.UpdateInventory(inventoryMap))
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_inventoryRepository.UpdateInventory(inventoryMap,actionPeformerId,referenceId))
             {
                 ModelState.AddModelError("", "Something went wrong updating Inventory");
                 return StatusCode(500, ModelState);
@@ -82,5 +87,29 @@ namespace E_Commerce_Api.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{inventoryId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteInventory(int inventoryId,[FromQuery] int actionPeformerId) {
+            if(!_inventoryRepository.CheckIfInvetoryExist(inventoryId)){
+                return NotFound();
+            }
+
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_inventoryRepository.DeleteInventory(inventoryId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete Inventory");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("Inventory Deleted Successfully");
+         }
     }
 }

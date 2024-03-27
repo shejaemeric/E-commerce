@@ -11,8 +11,10 @@ namespace E_Commerce_Api.Interfaces
         bool CheckIfInvetoryExist(int InvetoryId);
         bool CreateInvetory(Inventory inventory);
 
-        bool UpdateInventory(Inventory inventory);
+        bool UpdateInventory(Inventory inventory,int actionPeformerId, string referenceId);
         ICollection<Inventory> GetAllInventories();
+
+        bool DeleteInventory(int inventoryId, int actionPeformerId, string referenceId);
         bool Save();
     }
 }

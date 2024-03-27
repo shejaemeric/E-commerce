@@ -72,7 +72,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateShoppingSession(int shoppingSessionId,[FromQuery] int userId,[FromBody] ShoppingSessionDto shoppingSessionUpdate)
+        public IActionResult UpdateShoppingSession(int shoppingSessionId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] ShoppingSessionDto shoppingSessionUpdate)
         {
             if (shoppingSessionUpdate == null)
                 return BadRequest(ModelState);
@@ -88,7 +88,10 @@ namespace E_Commerce_Api.Controllers
 
             var shoppingSessionMap = _mapper.Map<ShoppingSession>(shoppingSessionUpdate);
 
-            if (!_shoppingSessionRepository.UpdateShoppingSession(userId,shoppingSessionMap))
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_shoppingSessionRepository.UpdateShoppingSession(userId,shoppingSessionMap,actionPeformerId,referenceId))
             {
                 ModelState.AddModelError("", "Something went wrong updating User Payment");
                 return StatusCode(500, ModelState);
@@ -96,6 +99,29 @@ namespace E_Commerce_Api.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{shoppingSessionId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteOrderDetails(int shoppingSessionId,[FromQuery] int actionPeformerId) {
+            if(!_shoppingSessionRepository.CheckIfShoppingSessionExist(shoppingSessionId)){
+                return NotFound();
+            }
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_shoppingSessionRepository.DeleteShoppingSession(shoppingSessionId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete Shopping Session");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("Shopping Session Deleted Successfully");
+         }
 
 
     }

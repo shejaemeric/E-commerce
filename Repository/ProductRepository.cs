@@ -44,6 +44,20 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
+        public bool DeleteProduct(int productId, int actionPeformerId, string referenceId)
+        {
+            try {
+                string query = " Exec  [dbo].[proc_deleteProduct] "  + productId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
         public ICollection<Product> GetAllProducts()
         {
             return _context.Products.OrderBy(p => p.Id).ToList();
@@ -73,7 +87,7 @@ namespace E_Commerce_Api.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool UpdateProduct( int discountId, int inventoryId, int productCategoryId, Product product)
+        public bool UpdateProduct( int discountId, int inventoryId, int productCategoryId, Product product,int actionPeformerId, string referenceId)
         {
             var discount = _context.Discounts.Find(discountId);
             if (discount == null) {
@@ -88,11 +102,22 @@ namespace E_Commerce_Api.Repository
                 return false;
             }
 
-            product.Discount= discount;
-            product.Inventory = inventory;
-            product.ProductCategory = productCategory;
-            _context.Update(product);
-            return Save();
+            try  {
+                string query = " Exec  [dbo].[proc_updateProduct] "  + productCategory.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+
+                product.Discount= discount;
+                product.Inventory = inventory;
+                product.ProductCategory = productCategory;
+                _context.Update(product);
+                return Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
         }
     }
 }

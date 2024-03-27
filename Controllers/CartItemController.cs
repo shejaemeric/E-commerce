@@ -14,25 +14,22 @@ namespace E_Commerce_Api.Controllers
     [Route("api/[controller]")]
     public class CartItemController : ControllerBase
     {
-        // ICollection<CartItem> GetAllCartItemsBySession(int sessionId);
-
-        // CartItem GetOneCartItem(int cartItemId);
-        // bool CheckIfCartItemExist(int cartItemId);
-
         private readonly ICartItemRepository _cartItemRepository;
         private readonly IShoppingSessionRepository _shoppingSessionRepository;
 
 
         private readonly IProductRepository _productRepository;
+        private readonly IUserRepository _userRepository;
 
 
         private readonly IMapper _mapper;
-        public CartItemController(IShoppingSessionRepository shoppingSessionRepository,ICartItemRepository cartItemRepository,IProductRepository productRepository,IMapper mapper)
+        public CartItemController(IShoppingSessionRepository shoppingSessionRepository,ICartItemRepository cartItemRepository,IProductRepository productRepository,IUserRepository userRepository,IMapper mapper)
         {
             _cartItemRepository = cartItemRepository;
             _mapper = mapper;
             _shoppingSessionRepository = shoppingSessionRepository;
             _productRepository = productRepository;
+            _userRepository = userRepository;
         }
 
         [HttpPost()]
@@ -95,7 +92,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPut("{cartItemId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult UpdateCartItem(int cartItemId,[FromQuery] int productId,[FromQuery] int shoppingSessionId,[FromBody] CartItemDto cartItemUpdate) {
+        public IActionResult UpdateCartItem(int cartItemId,[FromQuery] int productId,[FromQuery] int actionPeformerId,[FromQuery] int shoppingSessionId,[FromBody] CartItemDto cartItemUpdate) {
             if (cartItemUpdate == null)
                 return BadRequest(ModelState);
 
@@ -117,12 +114,39 @@ namespace E_Commerce_Api.Controllers
 
             var cartItemMap = _mapper.Map<CartItem>(cartItemUpdate);
 
-            if (!_cartItemRepository.UpdateCartItem(productId,shoppingSessionId,cartItemMap)) {
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_cartItemRepository.UpdateCartItem(productId,shoppingSessionId,cartItemMap,actionPeformerId,referenceId)) {
                 ModelState.AddModelError("", "Error Occured While Trying To Update");
                 return StatusCode(500, ModelState);
             }
             return NoContent();
         }
+
+        [HttpDelete("{cartItemId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteCartItem(int cartItemId,[FromQuery] int actionPeformerId) {
+            if(!_cartItemRepository.CheckIfCartItemExist(cartItemId)){
+                return NotFound();
+            }
+
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_cartItemRepository.DeleteCartItem(cartItemId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete Cart Item");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("Cart Item Deleted Successfully");
+         }
 
     }
 }

@@ -55,21 +55,16 @@ namespace E_Commerce_Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-                    // modelBuilder.Entity<User>()
-                    // .HasMany(u => u.UserAddresses)  // One User has many UserAddresses
-                    // .WithOne(ua => ua.User)         // Each UserAddress belongs to one User
-                    // .HasForeignKey(ua => ua.UserId);
-
-
-
-
-
                 modelBuilder.Entity<Discount>()
                 .Property(d => d.Discount_percent)
                 .HasColumnType("decimal(18, 2)"); // Adjust precision and scale as needed
 
                 modelBuilder.Entity<ShoppingSession>()
                 .Property(s => s.Total)
+                .HasColumnType("decimal(18, 2)");
+
+                modelBuilder.Entity<CartItem>()
+                .Property(s => s.Sub_total)
                 .HasColumnType("decimal(18, 2)");
 
                 // Archives
@@ -82,6 +77,34 @@ namespace E_Commerce_Api.Data
             modelBuilder.Entity<ShoppingSession_Archive>()
                 .Property(s => s.Total)
                 .HasColumnType("decimal(18, 2)");
+
+            modelBuilder.Entity<CartItem_Archive>()
+                .Property(s => s.Sub_total)
+                .HasColumnType("decimal(18, 2)");
+
+
+            modelBuilder.Entity<Product>().Property(p => p.DiscountId).IsRequired(false);
+            modelBuilder.Entity<Product>().Property(p => p.ProductCategoryId).IsRequired(false);
+            modelBuilder.Entity<Product>().Property(p => p.InventoryId).IsRequired(false);
+
+            modelBuilder.Entity<Product>()
+                    .HasOne(p => p.ProductCategory)
+                    .WithMany(p=>p.Products)
+                    .HasForeignKey(p => p.ProductCategoryId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Product>()
+                    .HasOne(p => p.Inventory)
+                    .WithMany(p=>p.Products)
+                    .HasForeignKey(p => p.InventoryId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Product>()
+                    .HasOne(p => p.Discount)
+                    .WithMany(p=>p.Products)
+                    .HasForeignKey(p => p.DiscountId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
         }
     }
 }

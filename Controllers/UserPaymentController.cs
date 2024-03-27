@@ -60,7 +60,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateUserPayment(int userPaymentId,[FromQuery] int userId,[FromBody] UserPaymentDto userPaymentUpdate)
+        public IActionResult UpdateUserPayment(int userPaymentId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] UserPaymentDto userPaymentUpdate)
         {
             if (userPaymentUpdate == null)
                 return BadRequest(ModelState);
@@ -76,7 +76,10 @@ namespace E_Commerce_Api.Controllers
 
             var userPaymentMap = _mapper.Map<UserPayment>(userPaymentUpdate);
 
-            if (!_userPaymentRepository.UpdateUserPayment(userId,userPaymentMap))
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_userPaymentRepository.UpdateUserPayment(userId,userPaymentMap,actionPeformerId,referenceId))
             {
                 ModelState.AddModelError("", "Something went wrong updating User Payment");
                 return StatusCode(500, ModelState);
@@ -119,5 +122,29 @@ namespace E_Commerce_Api.Controllers
             }
             return Ok(paymentDetails);
         }
+
+        [HttpDelete("{userPaymentId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteUserPayment(int userPaymentId,[FromQuery] int actionPeformerId) {
+            if(!_userPaymentRepository.CheckIfUserPaymentExist(userPaymentId)){
+                return NotFound();
+            }
+
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_userPaymentRepository.DeleteUserPayment(userPaymentId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete User Payment");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("User Payment Deleted Successfully");
+         }
     }
 }

@@ -150,7 +150,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateProduct(int productId,[FromQuery] int discountId,[FromQuery] int productCategoryId,[FromQuery] int InventoryId,[FromBody] ProductDto productUpdate) {
+        public IActionResult UpdateProduct(int productId,[FromQuery] int discountId,[FromQuery] int productCategoryId,[FromQuery] int actionPeformerId,[FromQuery] int InventoryId,[FromBody] ProductDto productUpdate) {
             if (productUpdate == null)
                 return BadRequest(ModelState);
             if (productId != productUpdate.Id)
@@ -174,12 +174,40 @@ namespace E_Commerce_Api.Controllers
 
             var productMap = _mapper.Map<Product>(productUpdate);
 
-            if (!_productRepository.UpdateProduct(discountId,InventoryId,productCategoryId,productMap)) {
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_productRepository.UpdateProduct(discountId,InventoryId,productCategoryId,productMap,actionPeformerId,referenceId)) {
                 ModelState.AddModelError("", "Error Occured While Trying To Update");
                 return StatusCode(500, ModelState);
             }
             return NoContent();
         }
+
+        [HttpDelete("{productId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteProduct(int productId,[FromQuery] int actionPeformerId) {
+            if(!_productRepository.CheckIfProductExist(productId)){
+                return NotFound();
+            }
+
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_productRepository.DeleteProduct(productId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete Product");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("Product Deleted Successfully");
+         }
+
 
     }
 

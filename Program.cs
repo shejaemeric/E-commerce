@@ -31,7 +31,9 @@ builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IUserPaymentRepository,UserPaymentRepository>();
 builder.Services.AddScoped<IProductCategoryRepository,ProductCategoryRepository>();
 builder.Services.AddScoped<IProductRepository,ProductRepository>();
-
+builder.Services.AddScoped<IRoleRepository,RoleRepository>();
+builder.Services.AddScoped<IPermissionRepository,PermissionRepository>();
+builder.Services.AddScoped<IPasswordResetTokenRepository,PasswordResetTokenRepository>();
 
 
 builder.Services.AddDbContext<DataContext>(options => {

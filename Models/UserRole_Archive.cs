@@ -8,6 +8,8 @@ namespace E_Commerce_Api.Models
     public class UserRole_Archive
     {
         public int Id { get; set; }
+
+        public int Archive_Id{ get; set; }
         public int UserId { get; set; }
 
         public int RoleId { get; set; }
@@ -17,7 +19,7 @@ namespace E_Commerce_Api.Models
 
         public DateTime Peformed_At { get; set; }
 
-           public int PeformedById { get; set; } // Foreign key
+        public int PeformedById { get; set; } // Foreign key
 
 
         //Can be old update or new update

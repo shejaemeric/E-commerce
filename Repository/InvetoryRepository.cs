@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using E_Commerce_Api.Data;
 using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce_Api.Repository
 {
@@ -27,6 +28,20 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
+        public bool DeleteInventory(int inventoryId, int actionPeformerId, string referenceId)
+        {
+            try    {
+            string query = " Exec  [dbo].[proc_deleteInventory] "  + inventoryId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
         public ICollection<Inventory> GetAllInventories()
         {
             return _context.Inventories.OrderBy(c => c.Id).ToList();
@@ -37,10 +52,21 @@ namespace E_Commerce_Api.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool UpdateInventory( Inventory inventory)
+        public bool UpdateInventory( Inventory inventory,int actionPeformerId, string referenceId)
         {
-            _context.Update(inventory);
-            return Save();
+
+            try  {
+                string query = " Exec  [dbo].[proc_updateInventory] "  + inventory.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                _context.Update(inventory);
+                return Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
         }
     }
 }

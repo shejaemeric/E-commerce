@@ -12,8 +12,10 @@ namespace E_Commerce_Api.Interfaces
         UserPayment GetOneUserPayment(int userPaymentId);
         bool CheckIfUserPaymentExist(int userPaymentId);
         bool CreateUserPayment(int userId,UserPayment userPayment);
-        bool UpdateUserPayment(int userId,UserPayment userPayment);
+        bool UpdateUserPayment(int userId,UserPayment userPayment,int actionPeformerId, string referenceId);
         public ICollection<UserPayment> GetAllUserPaymentByUser(int userId);
+
+        bool DeleteUserPayment(int paymentId, int actionPeformerId, string referenceId);
         bool Save();
     }
 }

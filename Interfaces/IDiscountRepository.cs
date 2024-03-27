@@ -13,8 +13,9 @@ namespace E_Commerce_Api.Interfaces
         bool CheckIfDiscountExist(int discountId);
         bool CreateDiscount(Discount discount);
 
-        bool UpdateDiscount(Discount discount);
-        bool Save();
+        bool UpdateDiscount(Discount discount,int actionPeformerId, string referenceId);
 
+        bool DeleteDiscount(int discountId, int actionPeformerId, string referenceId);
+        bool Save();
     }
 }

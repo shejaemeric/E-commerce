@@ -8,10 +8,13 @@ namespace E_Commerce_Api.Models
     public class Role_Archive
     {
         public int Id { get; set; }
+
+         public int Archive_Id{ get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
 
         public string Action { get; set; }
+
 
         public DateTime Peformed_At { get; set; }
 

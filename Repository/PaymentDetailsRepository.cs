@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using E_Commerce_Api.Models;
 using E_Commerce_Api.Data;
 using E_Commerce_Api.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce_Api.Repository
 {
@@ -41,10 +42,19 @@ namespace E_Commerce_Api.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool UpdatePaymentDetails( PaymentDetail paymentDetail)
+        public bool UpdatePaymentDetails( PaymentDetail paymentDetail,int actionPeformerId, string referenceId)
         {
-            _context.Update(paymentDetail);
-            return Save();
+            try  {
+                string query = " Exec  [dbo].[proc_updatePaymentDetail] "  + paymentDetail.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                _context.Update(paymentDetail);
+                return Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
     }
 }

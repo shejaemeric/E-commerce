@@ -17,11 +17,16 @@ namespace E_Commerce_Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+
+        private readonly IRoleRepository _roleRepository;
+        private readonly IPermissionRepository _permissionRepository;
         private readonly IMapper _mapper;
-        public UserController(IUserRepository userRepository,IMapper mapper)
+        public UserController(IUserRepository userRepository,IMapper mapper,IRoleRepository roleRepository,IPermissionRepository permissionRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _permissionRepository = permissionRepository;
+            _roleRepository = roleRepository;
         }
 
         [HttpPost()]
@@ -124,7 +129,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateUser(int userId,[FromBody] UserDto userUpdate)
+        public IActionResult UpdateUser(int userId,[FromBody] UserDto userUpdate,[FromQuery] int actionPeformerId)
         {
             if (userUpdate == null)
                 return BadRequest(ModelState);
@@ -140,7 +145,10 @@ namespace E_Commerce_Api.Controllers
 
             var userMap = _mapper.Map<User>(userUpdate);
 
-            if (!_userRepository.UpdateUser(userMap))
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_userRepository.UpdateUser(userMap,actionPeformerId,referenceId))
             {
                 ModelState.AddModelError("", "Something went wrong updating User");
                 return StatusCode(500, ModelState);
@@ -149,6 +157,66 @@ namespace E_Commerce_Api.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{userId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteUser(int actionPeformerId,[FromQuery] int userId) {
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+                return NotFound();
+            }
+
+            if(!_userRepository.CheckIfUserExist(userId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_userRepository.DeleteUser(actionPeformerId, userId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete User");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("User Deleted Successfully");
+         }
+
+        [HttpGet("roles/{roleId}")]
+        [ProducesResponseType(200,Type = typeof(ICollection<User>))]
+        [ProducesResponseType(400)]
+
+        public IActionResult GetAllUsersWithRole(int roleId)
+        {
+            if(!_roleRepository.CheckIfRoleExist(roleId)){
+                return NotFound();
+            }
+
+            var users = _mapper.Map<List<UserDto>>(_userRepository.GetAllUsersByRole(roleId));
+
+            if (!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            return Ok(users);
+        }
+
+
+        [HttpGet("permissions/{permissionId}")]
+        [ProducesResponseType(200,Type = typeof(ICollection<User>))]
+        [ProducesResponseType(400)]
+
+        public IActionResult GetAllUsersWithPermission(int permissionId)
+        {
+            if(!_permissionRepository.CheckIfPermissionExist(permissionId)){
+                return NotFound();
+            }
+
+            var users = _mapper.Map<List<UserDto>>(_userRepository.GetAllUsersByPermission(permissionId));
+
+            if (!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            return Ok(users);
+        }
 
     }
 }

@@ -83,7 +83,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdatePaymentDetail(int paymentDetailId,[FromBody] PaymentDetailsDto paymentDetailUpdate)
+        public IActionResult UpdatePaymentDetail(int paymentDetailId,[FromBody] PaymentDetailsDto paymentDetailUpdate,[FromQuery] int actionPeformerId)
         {
             if (paymentDetailUpdate == null)
                 return BadRequest(ModelState);
@@ -99,7 +99,10 @@ namespace E_Commerce_Api.Controllers
 
             var paymentDetailMap = _mapper.Map<PaymentDetail>(paymentDetailUpdate);
 
-            if (!_paymentDetailsRepository.UpdatePaymentDetails(paymentDetailMap))
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_paymentDetailsRepository.UpdatePaymentDetails(paymentDetailMap,actionPeformerId,referenceId))
             {
                 ModelState.AddModelError("", "Something went wrong updating Payment Detail");
                 return StatusCode(500, ModelState);

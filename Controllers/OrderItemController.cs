@@ -17,13 +17,16 @@ namespace E_Commerce_Api.Controllers
         private readonly IOrderItemRepository _orderItemRepository;
         private readonly IOrderDetailRepository _orderDetailRepository;
         private readonly IProductRepository _productRepository;
+
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public OrderItemController(IProductRepository productRepository,IOrderItemRepository orderItemRepository,IMapper mapper,IOrderDetailRepository orderDetailRepository)
+        public OrderItemController(IProductRepository productRepository,IUserRepository userRepository,IOrderItemRepository orderItemRepository,IMapper mapper,IOrderDetailRepository orderDetailRepository)
         {
             _orderItemRepository = orderItemRepository;
             _mapper=mapper;
             _orderDetailRepository = orderDetailRepository;
             _productRepository = productRepository;
+            _userRepository = userRepository;
         }
 
         [HttpPost()]
@@ -105,7 +108,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateOrderItem(int orderItemId,[FromQuery] int orderDetailId,[FromQuery] int productId,[FromBody] CreateOrderItemsDto orderItemUpdate) {
+        public IActionResult UpdateOrderItem(int orderItemId,[FromQuery] int orderDetailId,[FromQuery] int actionPeformerId,[FromQuery] int productId,[FromBody] CreateOrderItemsDto orderItemUpdate) {
             if (orderItemUpdate == null)
                 return BadRequest(ModelState);
 
@@ -128,12 +131,40 @@ namespace E_Commerce_Api.Controllers
 
             var orderItemMap = _mapper.Map<OrderItem>(orderItemUpdate);
 
-            if (!_orderItemRepository.UpdateOrderItem(productId,orderDetailId,orderItemMap)) {
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_orderItemRepository.UpdateOrderItem(productId,orderDetailId,orderItemMap,actionPeformerId,referenceId)) {
                 ModelState.AddModelError("", "Error Occured While Trying To update");
                 return StatusCode(500, ModelState);
             }
             return NoContent();
         }
+
+        [HttpDelete("{orderItemId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteOrderItem(int orderItemId,[FromQuery] int actionPeformerId) {
+            if(!_orderItemRepository.CheckIfOrderItemExist(orderItemId)){
+                return NotFound();
+            }
+
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_orderItemRepository.DeleteOrderItem(orderItemId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete Order Item");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("Order Item Deleted Successfully");
+         }
 
 
     }

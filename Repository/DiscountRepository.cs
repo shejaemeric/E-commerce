@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using E_Commerce_Api.Models;
 using E_Commerce_Api.Data;
 using E_Commerce_Api.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce_Api.Repository
 {
@@ -43,10 +44,34 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
-        public bool UpdateDiscount( Discount discount)
+        public bool UpdateDiscount( Discount discount,int actionPeformerId, string referenceId)
         {
-            _context.Update(discount);
-            return Save();
+            try  {
+                string query = " Exec  [dbo].[proc_updateDiscount] "  + discount.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                _context.Update(discount);
+                return Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
+        }
+
+        public bool DeleteDiscount(int discountId, int actionPeformerId, string referenceId)
+        {
+        try {
+            string query = " Exec  [dbo].[proc_deleteDiscount] "  + discountId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
     }
 }

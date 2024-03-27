@@ -8,9 +8,9 @@ namespace E_Commerce_Api.Models
     public class RolePermission_Archive
     {
         public int Id { get; set; }
+        public int Archive_Id{ get; set; }
         public int RoleId { get; set; }
         public int PermissionId { get; set; }
-
 
         public string Action { get; set; }
 

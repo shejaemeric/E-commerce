@@ -59,8 +59,9 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
-        public bool UpdateOrderItem( int productId, int orderDetailId, OrderItem orderItem)
+        public bool UpdateOrderItem( int productId, int orderDetailId, OrderItem orderItem,int actionPeformerId,string referenceId)
         {
+
             var product = _context.Products.Find(productId);
             if ( product == null) {
                 return false;
@@ -70,11 +71,33 @@ namespace E_Commerce_Api.Repository
             if (orderDetail == null) {
                 return false;
             }
+            try  {
+                string query = " Exec  [dbo].[proc_updateOrderItem] "  + orderItem.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                orderItem.Product = product;
+                orderItem.OrderDetails = orderDetail;
+                _context.Update(orderItem);
+                return Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
 
-            orderItem.Product = product;
-            orderItem.OrderDetails = orderDetail;
-            _context.Update(orderItem);
-            return Save();
+        public bool DeleteOrderItem(int orderItemId, int actionPeformerId, string referenceId)
+        {
+            try {
+                string query = " Exec  [dbo].[proc_deleteCartItem] "  + orderItemId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
     }
 

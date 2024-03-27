@@ -15,17 +15,13 @@ namespace E_Commerce_Api.Controllers
     public class OrderDetailController : ControllerBase
     {
 
-        // ICollection<OrderDetail> GetAllOrderByUser(int userId);
-        // OrderDetail GetOneOrder(int orderId);
-
-        // ICollection<OrderDetail> GetAllOrderDetailsByOrder(int orderId);
-        // bool CheckIfOrderDetailExist(int orderDetailId);
-
         private readonly IOrderDetailRepository _orderDetailRepository;
 
         private readonly IUserRepository _userRepository;
 
         private readonly IPaymentDetailsRepository _paymentDetailsRepository;
+
+
         private readonly IMapper _mapper;
         public OrderDetailController(IMapper mapper,IOrderDetailRepository orderDetailRepository,IUserRepository userRepository,IPaymentDetailsRepository paymentDetailsRepository)
         {
@@ -111,7 +107,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPut("{orderDetailId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult UpdateOrderDetail(int orderDetailId,[FromQuery] int paymentDetailId,[FromQuery] int userId,[FromBody] OrderDetailsDto orderDetailUpdate) {
+        public IActionResult UpdateOrderDetail(int orderDetailId,[FromQuery] int paymentDetailId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] OrderDetailsDto orderDetailUpdate) {
             if (orderDetailUpdate == null)
                 return BadRequest(ModelState);
             if(orderDetailUpdate.Id == orderDetailId)
@@ -130,9 +126,13 @@ namespace E_Commerce_Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
             var orderDetailMap = _mapper.Map<OrderDetail>(orderDetailUpdate);
 
-            if (!_orderDetailRepository.UpdateOrderDetail(userId,paymentDetailId,orderDetailMap)) {
+
+            if (!_orderDetailRepository.UpdateOrderDetail(userId,paymentDetailId,orderDetailMap,actionPeformerId,referenceId)) {
                 ModelState.AddModelError("", "Error Occured While Trying To Update");
                 return StatusCode(500, ModelState);
             }
@@ -143,16 +143,23 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult DeleteOrderDetails(int orderDetailId,[FromQuery] int userId) {
+        public IActionResult DeleteOrderDetails(int orderDetailId,[FromQuery] int actionPeformerId) {
             if(!_orderDetailRepository.CheckIfOrderDetailExist(orderDetailId)){
+                return NotFound();
+            }
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
                 return NotFound();
             }
 
             Guid guid = Guid.NewGuid();
             string referenceId = guid.ToString();
 
-            var str = _orderDetailRepository.DeleteOrderDetail(orderDetailId, userId, referenceId);
-            return Ok(str);
+            if (!_orderDetailRepository.DeleteOrderDetail(orderDetailId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("Order Detail deleted successfully");
          }
     }
 }

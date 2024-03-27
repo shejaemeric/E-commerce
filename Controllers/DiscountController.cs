@@ -16,11 +16,13 @@ namespace E_Commerce_Api.Controllers
     {
 
         private readonly IDiscountRepository _discountRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public DiscountController(IDiscountRepository discountRepository,IMapper mapper)
+        public DiscountController(IDiscountRepository discountRepository,IMapper mapper,IUserRepository userRepository)
         {
             _discountRepository = discountRepository;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
         [HttpPost()]
@@ -85,7 +87,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateDiscount(int discountId,[FromBody] DiscountDto discountUpdate)
+        public IActionResult UpdateDiscount(int discountId,[FromBody] DiscountDto discountUpdate,[FromQuery] int actionPeformerId)
         {
             if (discountUpdate == null)
                 return BadRequest(ModelState);
@@ -101,7 +103,10 @@ namespace E_Commerce_Api.Controllers
 
             var discountMap = _mapper.Map<Discount>(discountUpdate);
 
-            if (!_discountRepository.UpdateDiscount(discountMap))
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_discountRepository.UpdateDiscount(discountMap,actionPeformerId,referenceId))
             {
                 ModelState.AddModelError("", "Something went wrong updating Discount");
                 return StatusCode(500, ModelState);
@@ -109,6 +114,31 @@ namespace E_Commerce_Api.Controllers
 
             return NoContent();
         }
+
+
+        [HttpDelete("{discountId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteDiscount(int discountId,[FromQuery] int actionPeformerId) {
+            if(!_discountRepository.CheckIfDiscountExist(discountId)){
+                return NotFound();
+            }
+
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_discountRepository.DeleteDiscount(discountId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete Discount");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("Discount Deleted Successfully");
+         }
 
 
     }

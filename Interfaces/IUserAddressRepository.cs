@@ -17,7 +17,9 @@ bool Save();
 
         bool CreateUserAddress(int userId,UserAddress userAddress);
 
-        bool UpdateUserAddress(int userId,UserAddress userAddress);
+        bool UpdateUserAddress(int userId,UserAddress userAddress,int actionPeformerId, string referenceId);
+
+        bool DeleteUserAddress(int addressId, int actionPeformerId, string referenceId);
         public ICollection<UserAddress> GetAllUserAddressByUser(int userId);
     }
 }

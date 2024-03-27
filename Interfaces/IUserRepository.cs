@@ -21,9 +21,11 @@ namespace E_Commerce_Api.Interfaces
 
         bool CheckIfUserExist(int userId);
 
+         bool DeleteUser(int userId, int actionPeformerId, string referenceId);
+
         bool CreateUser(User user);
 
-        bool UpdateUser(User user);
+        bool UpdateUser(User user,int actionPeformerId, string referenceId);
         bool Save();
 
     }

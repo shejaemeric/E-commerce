@@ -40,6 +40,8 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
+
+
         public ICollection<CartItem> GetAllCartItemsBySession(int sessionId)
         {
             return _context.CartItems.Where(ci => ci.ShoppingSession.Id == sessionId).Include(p=>p.Product).ToList();
@@ -54,7 +56,7 @@ namespace E_Commerce_Api.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool UpdateCartItem( int productId, int shoppingSessionId, CartItem cartItem)
+        public bool UpdateCartItem( int productId, int shoppingSessionId, CartItem cartItem,int actionPeformerId, string referenceId)
         {
             var product = _context.Products.Find(productId);
             if ( product == null) {
@@ -65,10 +67,34 @@ namespace E_Commerce_Api.Repository
             if (shoppingSession == null) {
                 return false;
             }
-            cartItem.Product = product;
-            cartItem.ShoppingSession = shoppingSession;
-            _context.Update(cartItem);
-            return Save();
+
+            try  {
+                string query = " Exec  [dbo].[proc_updateCartItem] "  + cartItem.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                cartItem.Product = product;
+                cartItem.ShoppingSession = shoppingSession;
+                _context.Update(cartItem);
+                return Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public bool DeleteCartItem(int cartItemId, int actionPeformerId, string referenceId)
+        {
+            try {
+                string query = " Exec  [dbo].[proc_deleteCartItem] "  + cartItemId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
     }
 }

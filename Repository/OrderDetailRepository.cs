@@ -41,18 +41,17 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
-        public string DeleteOrderDetail(int orderDetailId, int actionPeformerId, string referenceId)
+        public bool DeleteOrderDetail(int orderDetailId, int actionPeformerId, string referenceId)
         {
-                            try    {
-            string query = " Exec  [dbo].[deleteOrderDetail] "  + orderDetailId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+            try    {
+            string query = " Exec  [dbo].[proc_deleteOrderDetail] "  + orderDetailId + "," + actionPeformerId + ", '" + referenceId + "'; ";
                 var cmd = _context.Database.ExecuteSqlRaw(query);
-
-                return cmd.ToString();
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                return false;
             }
         }
 
@@ -76,7 +75,7 @@ namespace E_Commerce_Api.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool UpdateOrderDetail( int userId, int paymentDetailId, OrderDetail orderDetail)
+        public bool UpdateOrderDetail( int userId, int paymentDetailId, OrderDetail orderDetail,int actionPeformerId, string referenceId)
         {
             var paymentDetail = _context.PaymentDetails.Find(paymentDetailId);
 
@@ -89,10 +88,20 @@ namespace E_Commerce_Api.Repository
             if ( user == null) {
                 return false;
             }
-            orderDetail.PaymentDetails = paymentDetail;
-            orderDetail.User = user;
-            _context.Update(orderDetail);
-            return Save();
+            try  {
+                string query = " Exec  [dbo].[proc_updateOrderDetail] "  + orderDetail.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                orderDetail.PaymentDetails = paymentDetail;
+                orderDetail.User = user;
+                _context.Update(orderDetail);
+                return Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
         }
     }
 }

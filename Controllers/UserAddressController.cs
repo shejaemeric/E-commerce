@@ -95,7 +95,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateUserAddress(int userAddressId,[FromQuery] int userId,[FromBody] UserAddressDto userAddressUpdate)
+        public IActionResult UpdateUserAddress(int userAddressId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] UserAddressDto userAddressUpdate)
         {
             if (userAddressUpdate == null)
                 return BadRequest(ModelState);
@@ -111,7 +111,10 @@ namespace E_Commerce_Api.Controllers
 
             var userAddressMap = _mapper.Map<UserAddress>(userAddressUpdate);
 
-            if (!_userAddressRepository.UpdateUserAddress(userId,userAddressMap))
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_userAddressRepository.UpdateUserAddress(userId,userAddressMap,actionPeformerId,referenceId))
             {
                 ModelState.AddModelError("", "Something went wrong updating User Address");
                 return StatusCode(500, ModelState);
@@ -119,6 +122,30 @@ namespace E_Commerce_Api.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{userAddressId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteUserAddress(int userAddressId,[FromQuery] int actionPeformerId) {
+            if(!_userAddressRepository.CheckIfUserAddressExist(userAddressId)){
+                return NotFound();
+            }
+
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_userAddressRepository.DeleteUserAddress(userAddressId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete User Address");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("User Address Deleted Successfully");
+         }
 
     }
 }

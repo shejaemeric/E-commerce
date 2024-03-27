@@ -8,6 +8,8 @@ namespace E_Commerce_Api.Models
     public class PasswordResetToken_Archive
     {
          public int Id { get; set; }
+
+        public int Archive_Id{ get; set; }
         public int UserId { get; set; }
         public string Token { get; set; }
         public DateTime Expiration { get; set; }

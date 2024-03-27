@@ -8,6 +8,8 @@ namespace E_Commerce_Api.Models
     public class Permission_Archive
     {
         public int Id { get; set; }
+
+        public int Archive_Id{ get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
 

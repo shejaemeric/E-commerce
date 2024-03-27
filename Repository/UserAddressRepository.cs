@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using E_Commerce_Api.Models;
 using E_Commerce_Api.Data;
 using E_Commerce_Api.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce_Api.Repository
 {
@@ -33,6 +34,7 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
+
         public ICollection<UserAddress> GetAllUserAddressByUser(int userId)
         {
             return _context.UserAddresses.Where(ua => ua.User.Id == userId).ToList();
@@ -47,16 +49,41 @@ namespace E_Commerce_Api.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool UpdateUserAddress( int userId, UserAddress userAddress)
+        public bool UpdateUserAddress( int userId, UserAddress userAddress,int actionPeformerId, string referenceId)
         {
             var user = _context.Users.Find(userId);
             if (user == null) {
                 return false;
             }
+            try  {
+                string query = " Exec  [dbo].[proc_updateUserAddress] "  + userAddress.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
 
-            userAddress.User = user;
-            _context.Update(userAddress);
-            return Save();
+                userAddress.User = user;
+                _context.Update(userAddress);
+                return Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
+
+        }
+
+        public bool DeleteUserAddress(int addressId, int actionPeformerId, string referenceId)
+        {
+            try {
+                string query = " Exec  [dbo].[proc_deleteUserAddress] "  + addressId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
     }
 }
