@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240326091907_Add cascade behavior")]
-    partial class Addcascadebehavior
+    [Migration("20240327135230_REMOVE USER IN ARCHIVE")]
+    partial class REMOVEUSERINARCHIVE
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -678,6 +678,9 @@ namespace ECommerceApi.Migrations
                     b.Property<DateTime>("Created_At")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("Deleted_At")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Desc")
                         .IsRequired()
                         .HasMaxLength(2147483647)
@@ -691,6 +694,9 @@ namespace ECommerceApi.Migrations
 
                     b.Property<int?>("InventoryId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Is_deleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("Modified_At")
                         .HasColumnType("datetime2");
@@ -1256,8 +1262,6 @@ namespace ECommerceApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("UserPayments_Archive");
                 });
 
@@ -1522,17 +1526,6 @@ namespace ECommerceApi.Migrations
                 {
                     b.HasOne("E_Commerce_Api.Models.User", "User")
                         .WithMany("UserPayments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("E_Commerce_Api.Models.UserPayment_Archive", b =>
-                {
-                    b.HasOne("E_Commerce_Api.Models.User", "User")
-                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

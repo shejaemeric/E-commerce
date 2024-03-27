@@ -89,7 +89,7 @@ namespace E_Commerce_Api.Repository
         public bool DeleteOrderItem(int orderItemId, int actionPeformerId, string referenceId)
         {
             try {
-                string query = " Exec  [dbo].[proc_deleteCartItem] "  + orderItemId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                string query = " Exec  [dbo].[proc_deleteOrderItem] "  + orderItemId + "," + actionPeformerId + ", '" + referenceId + "'; ";
                 var cmd = _context.Database.ExecuteSqlRaw(query);
                 return true;
             }

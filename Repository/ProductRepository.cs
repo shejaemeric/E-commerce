@@ -39,6 +39,9 @@ namespace E_Commerce_Api.Repository
 
             product.Discount= discount;
             product.Inventory = inventory;
+            product.Is_deleted = false;
+            product.Deleted_At = DateTime.Now;
+
             product.ProductCategory = productCategory;
             _context.Add(product);
             return Save();
@@ -60,7 +63,7 @@ namespace E_Commerce_Api.Repository
 
         public ICollection<Product> GetAllProducts()
         {
-            return _context.Products.OrderBy(p => p.Id).ToList();
+            return _context.Products.Where(p=>p.Is_deleted == false).OrderBy(p => p.Id).ToList();
         }
 
         public Product GetOneProduct(int productId)

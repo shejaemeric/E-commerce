@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ECommerceApi.Migrations
 {
     /// <inheritdoc />
-    public partial class Addcascadebehavior : Migration
+    public partial class firstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -511,7 +511,9 @@ namespace ECommerceApi.Migrations
                     ModifiedAt = table.Column<DateTime>(name: "Modified_At", type: "datetime2", nullable: false),
                     DiscountId = table.Column<int>(type: "int", nullable: true),
                     InventoryId = table.Column<int>(type: "int", nullable: true),
-                    ProductCategoryId = table.Column<int>(type: "int", nullable: true)
+                    ProductCategoryId = table.Column<int>(type: "int", nullable: true),
+                    Isdeleted = table.Column<bool>(name: "Is_deleted", type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(name: "Deleted_At", type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

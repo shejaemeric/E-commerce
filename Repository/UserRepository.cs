@@ -80,6 +80,7 @@ namespace E_Commerce_Api.Repository
 
         public bool DeleteUser(int userId, int actionPeformerId, string referenceId)
         {
+            Console.WriteLine("deleting" + userId + "-" +actionPeformerId+ "-" +referenceId);
             try{
             string query = "Exec  [dbo].[proc_deleteUser] "  + userId + "," + actionPeformerId + ", '" + referenceId + "'; ";
                 var cmd = _context.Database.ExecuteSqlRaw(query);

@@ -305,7 +305,8 @@ namespace E_Commerce_Api.Seed
                 Active = true,
                 Discount_percent = 10,
                 Created_At = DateTime.Now,
-                Modified_At = DateTime.Now
+                Modified_At = DateTime.Now,
+
             };
 
             var discount1 = new Discount
@@ -350,7 +351,9 @@ namespace E_Commerce_Api.Seed
                 ProductCategory = productCategory,
                 Discount = discount, // Assign the discount to the product
                 Inventory = inventory,
-                In_stock = true
+                In_stock = true,
+                Is_deleted = false,
+                 Deleted_At = DateTime.Now,
             };
 
             var product1 = new Product
@@ -364,7 +367,9 @@ namespace E_Commerce_Api.Seed
                 ProductCategory = productCategory1,
                 Discount = discount1, // Assign the discount to the product
                 Inventory = inventory1,
-                In_stock = true
+                In_stock = true,
+                Is_deleted = false,
+                Deleted_At = DateTime.Now,
             };
             context.Products.Add(product);
              context.Products.Add(product1);

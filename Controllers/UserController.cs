@@ -161,7 +161,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult DeleteUser(int actionPeformerId,[FromQuery] int userId) {
+        public IActionResult DeleteUser(int actionPeformerId, int userId) {
             if(!_userRepository.CheckIfUserExist(actionPeformerId)){
                 return NotFound();
             }
@@ -173,7 +173,7 @@ namespace E_Commerce_Api.Controllers
             Guid guid = Guid.NewGuid();
             string referenceId = guid.ToString();
 
-            if (!_userRepository.DeleteUser(actionPeformerId, userId, referenceId)) {
+            if (!_userRepository.DeleteUser(userId,actionPeformerId, referenceId)) {
                 ModelState.AddModelError("", "Error Occured While Trying To Delete User");
                 return StatusCode(500, ModelState);
 

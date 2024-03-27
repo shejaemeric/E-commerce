@@ -42,7 +42,7 @@ namespace E_Commerce_Api.Controllers
         }
 
 
-        [HttpGet("{userId}")]
+        [HttpGet("user/{userId}")]
         [ProducesResponseType(200,Type = typeof(ICollection<PasswordResetToken>))]
         [ProducesResponseType(400)]
         public IActionResult GetUnexpiredPasswordTokensByUser(int userId)
@@ -97,6 +97,29 @@ namespace E_Commerce_Api.Controllers
             {
                 ModelState.AddModelError("", "Something went wrong updating PasswordResetToken");
                 return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{passwordResetTokenId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeletePokemon(int passwordResetTokenId)
+        {
+            if (!_passwordResetTokenRepository.CheckIfPasswordResetTokenExist(passwordResetTokenId))
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var passwordResetTokenMap = _passwordResetTokenRepository.GetOnePasswordResetToken(passwordResetTokenId);
+            if (!_passwordResetTokenRepository.DeletePasswordResetToken(passwordResetTokenMap))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting owner");
             }
 
             return NoContent();

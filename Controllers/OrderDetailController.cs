@@ -35,11 +35,12 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreateOrderDetail([FromQuery] int paymentDetailId,[FromQuery] int userId,[FromBody] OrderDetailsDto orderDetailCreate) {
+
             if (orderDetailCreate == null)
                 return BadRequest(ModelState);
 
             if(!_paymentDetailsRepository.CheckIfPaymentDetailExist(paymentDetailId)){
-                return NotFound(new {errorMessage = "Product not found"});
+                return NotFound(new {errorMessage = "Payment details not found"});
             }
 
             if(!_userRepository.CheckIfUserExist(userId)){
@@ -108,6 +109,11 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult UpdateOrderDetail(int orderDetailId,[FromQuery] int paymentDetailId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] OrderDetailsDto orderDetailUpdate) {
+
+            if (orderDetailId != orderDetailUpdate.Id) {
+                return BadRequest(ModelState);
+            }
+
             if (orderDetailUpdate == null)
                 return BadRequest(ModelState);
             if(orderDetailUpdate.Id == orderDetailId)

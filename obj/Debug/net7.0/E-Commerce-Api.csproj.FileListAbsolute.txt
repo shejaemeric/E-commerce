@@ -75,3 +75,4 @@
 /Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/obj/Debug/net7.0/E-Commerce-Api.pdb
 /Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/obj/Debug/net7.0/E-Commerce-Api.genruntimeconfig.cache
 /Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/obj/Debug/net7.0/ref/E-Commerce-Api.dll
+/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/bin/Debug/net7.0/Backups/SP AND FUNCTIONS.json

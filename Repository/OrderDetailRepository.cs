@@ -6,6 +6,7 @@ using E_Commerce_Api.Models;
 using E_Commerce_Api.Data;
 using E_Commerce_Api.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace E_Commerce_Api.Repository
 {
@@ -22,8 +23,10 @@ namespace E_Commerce_Api.Repository
             return _context.OrderDetails.Any(od => od.Id ==orderDetailId);
         }
 
-        public bool CreateOrderDetail(int paymentDetailId,int userId, OrderDetail orderDetail)
+        public bool CreateOrderDetail(int userId,int paymentDetailId, OrderDetail orderDetail)
         {
+            Console.WriteLine("paymentId" + paymentDetailId);
+            Console.WriteLine("userId" + userId);
             var paymentDetail = _context.PaymentDetails.Find(paymentDetailId);
 
             if ( paymentDetail == null) {
@@ -35,6 +38,8 @@ namespace E_Commerce_Api.Repository
             if ( user == null) {
                 return false;
             }
+            Trace.WriteLine(user);
+            Trace.WriteLine(paymentDetail);
             orderDetail.PaymentDetails = paymentDetail;
             orderDetail.User = user;
             _context.Add(orderDetail);
@@ -77,6 +82,7 @@ namespace E_Commerce_Api.Repository
 
         public bool UpdateOrderDetail( int userId, int paymentDetailId, OrderDetail orderDetail,int actionPeformerId, string referenceId)
         {
+            Console.WriteLine(userId + "-" + paymentDetailId + "-" + actionPeformerId + "-" + referenceId + "-" + orderDetail.Id);
             var paymentDetail = _context.PaymentDetails.Find(paymentDetailId);
 
             if ( paymentDetail == null) {

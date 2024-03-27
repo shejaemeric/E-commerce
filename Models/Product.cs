@@ -38,5 +38,8 @@ namespace E_Commerce_Api.Models
 
         [ForeignKey(nameof(ProductCategoryId))]
         public ProductCategory ProductCategory { get; set; }
+
+        public bool Is_deleted { get; set; }
+        public DateTime Deleted_At { get; set; }
     }
 }

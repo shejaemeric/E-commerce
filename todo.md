@@ -34,13 +34,13 @@ send(newId,oldId)=> archive old => new to non-archive =>
 
 ### Tomorrow
 
-Implement product Delete
+Implement product Delete👍🏾
 
 test above
 finish:
 
 password reset(normal delete)
-order detail add also delete payment details
+order detail add also delete payment details👍🏾
 
 ## To ask
 

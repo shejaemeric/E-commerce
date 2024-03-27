@@ -22,5 +22,7 @@ namespace E_Commerce_Api.Interfaces
 
         public ICollection<PasswordResetToken> GetUnexpiredPasswordResetTokensByUser(int userId);
 
+        bool DeletePasswordResetToken(PasswordResetToken passwordResetToken);
+
     }
 }

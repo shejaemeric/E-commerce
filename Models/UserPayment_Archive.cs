@@ -22,15 +22,14 @@ namespace E_Commerce_Api.Models
         public int? Expiration_Month { get; set; }
         public int? Expiration_Year { get; set; }
         public DateTime Created_At { get; set; }
-        public int UserId { get; set; } // Foreign key property for the relationship with User
-        public User User { get; set; }
+        public int UserId { get; set; } // Foreign key property for the relationship with UseR
 
 
         public string Action { get; set; }
 
         public DateTime Peformed_At { get; set; }
 
-           public int PeformedById { get; set; } // Foreign key
+        public int PeformedById { get; set; } // Foreign key
 
 
         //Can be old update or new update

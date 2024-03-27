@@ -28,6 +28,12 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
+        public bool DeletePasswordResetToken(PasswordResetToken passwordResetToken)
+        {
+            _context.Remove(passwordResetToken);
+            return Save();
+        }
+
         public PasswordResetToken GetOnePasswordResetToken(int passwordResetTokenId)
         {
             return _context.PasswordResetTokens.FirstOrDefault(pt => pt.Id == passwordResetTokenId);

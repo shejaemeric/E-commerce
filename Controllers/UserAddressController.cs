@@ -97,6 +97,10 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(404)]
         public IActionResult UpdateUserAddress(int userAddressId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] UserAddressDto userAddressUpdate)
         {
+
+            if (userAddressId != userAddressUpdate.Id) {
+                return BadRequest(ModelState);
+            }
             if (userAddressUpdate == null)
                 return BadRequest(ModelState);
 
