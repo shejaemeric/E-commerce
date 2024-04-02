@@ -47,6 +47,11 @@ namespace E_Commerce_Api.Repository
             return _context.Inventories.OrderBy(c => c.Id).ToList();
         }
 
+        public Inventory GetOneInventory(int inventoryId)
+        {
+            return _context.Inventories.FirstOrDefault(i => i.Id == inventoryId);
+        }
+
         public bool Save()
         {
             return _context.SaveChanges() > 0;

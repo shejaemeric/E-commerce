@@ -25,8 +25,9 @@ namespace E_Commerce_Api.Models
 
         public DateTime Peformed_At { get; set; }
 
-        public int PeformedById { get; set; } // Foreign key
+        public int PeformedById { get; set; }
 
+        public int RoleId { get; set; }
 
         //Can be old update or new update
         public string? Record_Type { get; set; }

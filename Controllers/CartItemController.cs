@@ -7,6 +7,7 @@ using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -60,6 +61,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("session/{sessionId}")]
         [ProducesResponseType(200,Type = typeof(ICollection<CartItem>))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult GetAllCartItemsBySession(int sessionId)
         {
             if(! _shoppingSessionRepository.CheckIfShoppingSessionExist(sessionId)){
@@ -76,6 +78,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{cartItemId}")]
         [ProducesResponseType(200,Type = typeof(CartItem))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult GetOneCartItem(int cartItemId)
         {
             if(! _cartItemRepository.CheckIfCartItemExist(cartItemId)){
@@ -92,6 +95,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPut("{cartItemId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult UpdateCartItem(int cartItemId,[FromQuery] int productId,[FromQuery] int actionPeformerId,[FromQuery] int shoppingSessionId,[FromBody] CartItemDto cartItemUpdate) {
             if (cartItemUpdate == null)
                 return BadRequest(ModelState);
@@ -128,6 +132,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult DeleteCartItem(int cartItemId,[FromQuery] int actionPeformerId) {
             if(!_cartItemRepository.CheckIfCartItemExist(cartItemId)){
                 return NotFound();

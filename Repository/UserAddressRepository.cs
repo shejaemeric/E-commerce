@@ -85,5 +85,12 @@ namespace E_Commerce_Api.Repository
                 return false;
             }
         }
+
+        public bool IsUserAddressOwner(int userId, int addressId)
+        {
+            var address = _context.UserAddresses.Find(addressId);
+            if (address == null) return false;
+            return address.User.Id == userId;
+        }
     }
 }

@@ -82,5 +82,17 @@ namespace E_Commerce_Api.Repository
                 return false;
             }
         }
+
+        public bool IsUserPaymentOwner(int userId, int paymentId)
+        {
+            var payment = _context.UserPayments.Find(paymentId);
+            if (payment == null) return false;
+            return payment.User.Id == userId;
+        }
+
+        public ICollection<UserPayment> GetAllUserPayments()
+        {
+            return _context.UserPayments.OrderBy(up => up.Id).ToList();
+        }
     }
 }

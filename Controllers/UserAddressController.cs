@@ -8,11 +8,13 @@ using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using E_Commerce_Api.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UserAddressController : ControllerBase
     {
         public readonly IMapper _mapper;
@@ -60,6 +62,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(UserAddress))]
         [ProducesResponseType(400)]
 
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult GetOneUserAddress(int UserAddressId)
         {
             if(!_userAddressRepository.CheckIfUserAddressExist(UserAddressId)){
@@ -73,9 +76,28 @@ namespace E_Commerce_Api.Controllers
             return Ok(userDetail);
         }
 
+
+        [HttpGet]
+        [ProducesResponseType(200,Type=typeof(IEnumerable<UserAddress>))]
+        [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
+        public IActionResult GetUserAddresses()
+        {
+            var userAddresses = _mapper.Map<List<UserAddressDto>>(_userAddressRepository.GetAllUserAddresses());
+            if (!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            return Ok(userAddresses);
+        }
+
+
+
+
+
         [HttpGet("user/{userId}")]
         [ProducesResponseType(200,Type = typeof(IEnumerable<UserAddress>))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
 
         public IActionResult GetAllUserAddressByUser(int userId)
         {
@@ -95,6 +117,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult UpdateUserAddress(int userAddressId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] UserAddressDto userAddressUpdate)
         {
 
@@ -131,6 +154,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
+
         public IActionResult DeleteUserAddress(int userAddressId,[FromQuery] int actionPeformerId) {
             if(!_userAddressRepository.CheckIfUserAddressExist(userAddressId)){
                 return NotFound();

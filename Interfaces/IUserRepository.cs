@@ -26,6 +26,8 @@ namespace E_Commerce_Api.Interfaces
         bool CreateUser(User user);
 
         bool UpdateUser(User user,int actionPeformerId, string referenceId);
+
+        bool IsUserOwner(int userId,int ownerId);
         bool Save();
 
     }

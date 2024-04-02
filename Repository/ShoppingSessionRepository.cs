@@ -52,6 +52,14 @@ namespace E_Commerce_Api.Repository
         {
             return _context.ShoppingSessions.Where(c => c.User.Id == userId).OrderByDescending(ss => ss.Modified_At).FirstOrDefault();
         }
+
+        public bool IsShoppingSessionOwner(int userId, int shoppingSessionId)
+        {
+            var shoppingSession = _context.ShoppingSessions.Find(shoppingSessionId);
+            if (shoppingSession == null) return false;
+            return shoppingSession.User.Id == userId;
+        }
+
         public bool Save()
         {
             return _context.SaveChanges() > 0;

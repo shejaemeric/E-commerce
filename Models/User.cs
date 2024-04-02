@@ -19,9 +19,11 @@ namespace E_Commerce_Api.Models
             public DateTime Created_At { get; set; }
              public DateTime Modified_At { get; set; }
 
-             public ICollection<PasswordResetToken> PasswordResetTokens { get; set; }
+            public int RoleId { get; set; } // Foreign key
+            public Role Role { get; set;}
 
-             public ICollection<UserRole> UserRoles { get; set; }
+
+             public ICollection<PasswordResetToken> PasswordResetTokens { get; set; }
 
             public ICollection<UserAddress> UserAddresses { get; set;}
 

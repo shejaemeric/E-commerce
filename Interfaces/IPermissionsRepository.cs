@@ -21,7 +21,9 @@ namespace E_Commerce_Api.Interfaces
 
         public ICollection<Permission> GetAllPermissions();
 
-        public bool IsUserAllowedToPerformAction(int userId, int permissionId);
+        bool DeletePermission(int permissionId,int actionPeformerId, string referenceId);
+
+        // public bool IsUserAllowedToPerformAction(int userId, int permissionId);
 
     }
 }

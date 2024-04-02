@@ -15,7 +15,11 @@ namespace E_Commerce_Api.Interfaces
         bool UpdateUserPayment(int userId,UserPayment userPayment,int actionPeformerId, string referenceId);
         public ICollection<UserPayment> GetAllUserPaymentByUser(int userId);
 
+        public ICollection<UserPayment> GetAllUserPayments();
+
         bool DeleteUserPayment(int paymentId, int actionPeformerId, string referenceId);
+
+        bool IsUserPaymentOwner(int userId,int paymentId);
         bool Save();
     }
 }

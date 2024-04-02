@@ -44,6 +44,12 @@ namespace E_Commerce_Api.Repository
            return _context.PasswordResetTokens.Where(pt => pt.User.Id == userId && pt.Expiration < DateTime.Now).ToList();
         }
 
+        public bool IsPasswordResetOwner(int passwordResetTokenId, int userId)
+        {
+             var passwordReset = _context.PasswordResetTokens.Find(passwordResetTokenId);
+             return passwordReset.User.Id == userId;
+        }
+
         public bool Save()
         {
             return _context.SaveChanges() > 0;

@@ -7,11 +7,13 @@ using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+     [Authorize]
     public class PaymentDetailsController : ControllerBase
     {
         // PaymentDetail GetOnePaymentDetails(int paymentId);
@@ -29,6 +31,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin")]
         public IActionResult CreatePaymentDetails([FromBody] PaymentDetailsDto paymentDetailCreate) {
             if (paymentDetailCreate == null)
                 return BadRequest(ModelState);
@@ -45,11 +48,10 @@ namespace E_Commerce_Api.Controllers
             return Ok("Successfully Created");
         }
 
-
-
         [HttpGet()]
         [ProducesResponseType(200,Type = typeof(ICollection<PaymentDetail>))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult GetAllPaymentDetails()
         {
 
@@ -64,6 +66,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{paymentId}")]
         [ProducesResponseType(200,Type = typeof(PaymentDetail))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult GetOnePaymentDetail(int paymentId)
         {
             if(! _paymentDetailsRepository.CheckIfPaymentDetailExist(paymentId)){
@@ -83,6 +86,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "Admin")]
         public IActionResult UpdatePaymentDetail(int paymentDetailId,[FromBody] PaymentDetailsDto paymentDetailUpdate,[FromQuery] int actionPeformerId)
         {
             if (paymentDetailUpdate == null)

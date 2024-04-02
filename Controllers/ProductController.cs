@@ -7,6 +7,7 @@ using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -35,6 +36,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+         [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult CreateProduct([FromQuery] int discountId,[FromQuery] int productCategoryId,[FromQuery] int InventoryId,[FromBody] ProductDto productCreate) {
             if (productCreate == null)
                 return BadRequest(ModelState);
@@ -72,7 +74,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet]
         [ProducesResponseType(200,Type=typeof(IEnumerable<Product>))]
         [ProducesResponseType(400)]
-        public IActionResult GetUsers()
+        public IActionResult GetAllProducts()
         {
             var products = _mapper.Map<List<ProductDto>>(_productRepository.GetAllProducts());
             if (!ModelState.IsValid){
@@ -86,7 +88,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{productId}")]
         [ProducesResponseType(200,Type = typeof(Product))]
         [ProducesResponseType(400)]
-        public IActionResult GetOneUser(int productId)
+        public IActionResult GetOneProduct(int productId)
         {
             if(! _productRepository.CheckIfProductExist(productId)){
                 return NotFound();
@@ -150,6 +152,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult UpdateProduct(int productId,[FromQuery] int discountId,[FromQuery] int productCategoryId,[FromQuery] int actionPeformerId,[FromQuery] int InventoryId,[FromBody] ProductDto productUpdate) {
             if (productUpdate == null)
                 return BadRequest(ModelState);
@@ -184,10 +187,12 @@ namespace E_Commerce_Api.Controllers
             return NoContent();
         }
 
+
         [HttpDelete("{productId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+         [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult DeleteProduct(int productId,[FromQuery] int actionPeformerId) {
             if(!_productRepository.CheckIfProductExist(productId)){
                 return NotFound();

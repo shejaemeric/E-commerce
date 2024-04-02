@@ -96,5 +96,12 @@ namespace E_Commerce_Api.Repository
                 return false;
             }
         }
+
+        public bool IsCartOwner(int userId, int cartItemId)
+        {
+            var cartItem = _context.CartItems.Find(cartItemId);
+            if (cartItem == null) return false;
+            return cartItem.ShoppingSession.User.Id == userId;
+        }
     }
 }

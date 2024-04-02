@@ -8,12 +8,14 @@ using E_Commerce_Api.Models;
 using E_Commerce_Api.Data;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace E_Commerce_Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -32,7 +34,9 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateUser([FromBody] UserDto userCreate) {
+
+        [Authorize(Policy = "Admin/Manager")]
+        public IActionResult CreateUser([FromBody] CreateUserDto userCreate) {
             if (userCreate == null)
                 return BadRequest(ModelState);
 
@@ -48,6 +52,8 @@ namespace E_Commerce_Api.Controllers
                 return BadRequest(ModelState);
 
             var userMap = _mapper.Map<User>(userCreate);
+            userMap.RoleId = 3;
+
 
             if (!_userRepository.CreateUser(userMap)) {
                 ModelState.AddModelError("", "Error Occured While Trying To Save");
@@ -59,6 +65,9 @@ namespace E_Commerce_Api.Controllers
         [HttpGet]
         [ProducesResponseType(200,Type=typeof(IEnumerable<User>))]
         [ProducesResponseType(400)]
+
+
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult GetUsers()
         {
             var users = _mapper.Map<List<UserDto>>(_userRepository.GetAllUsers());
@@ -73,6 +82,8 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{userId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult GetOneUser(int userId)
         {
             if(! _userRepository.CheckIfUserExist(userId)){
@@ -92,6 +103,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(ICollection<UserAddress>))]
         [ProducesResponseType(400)]
 
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult GetAddress(int userId)
         {
             if(!_userRepository.CheckIfUserExist(userId)){
@@ -110,7 +122,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(ICollection<UserPayment>))]
         [ProducesResponseType(400)]
 
-        public IActionResult GetPaymentDetails(int userId)
+        [Authorize(Policy = "Admin/Manager/Owner")]
+        public IActionResult GetPaymentDetailsByUser(int userId)
         {
             if(!_userRepository.CheckIfUserExist(userId)){
                 return NotFound();
@@ -129,7 +142,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateUser(int userId,[FromBody] UserDto userUpdate,[FromQuery] int actionPeformerId)
+        [Authorize(Policy = "Admin/Manager/Owner")]
+        public IActionResult UpdateUser(int userId,[FromBody] CreateUserDto userUpdate,[FromQuery] int actionPeformerId)
         {
             if (userUpdate == null)
                 return BadRequest(ModelState);
@@ -161,6 +175,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult DeleteUser(int actionPeformerId, int userId) {
             if(!_userRepository.CheckIfUserExist(actionPeformerId)){
                 return NotFound();
@@ -185,6 +201,10 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(ICollection<User>))]
         [ProducesResponseType(400)]
 
+        [Authorize(policy:"AdminOnly")]
+        [Authorize(policy:"ManagerOnly")]
+
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult GetAllUsersWithRole(int roleId)
         {
             if(!_roleRepository.CheckIfRoleExist(roleId)){
@@ -203,6 +223,8 @@ namespace E_Commerce_Api.Controllers
         [HttpGet("permissions/{permissionId}")]
         [ProducesResponseType(200,Type = typeof(ICollection<User>))]
         [ProducesResponseType(400)]
+
+        [Authorize(Policy = "Admin/Manager")]
 
         public IActionResult GetAllUsersWithPermission(int permissionId)
         {

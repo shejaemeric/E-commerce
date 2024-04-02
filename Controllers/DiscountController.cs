@@ -7,6 +7,7 @@ using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -28,6 +29,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult CreateDiscount([FromBody] DiscountDto discountCreate) {
             if (discountCreate == null)
                 return BadRequest(ModelState);
@@ -87,6 +89,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult UpdateDiscount(int discountId,[FromBody] DiscountDto discountUpdate,[FromQuery] int actionPeformerId)
         {
             if (discountUpdate == null)
@@ -120,6 +123,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult DeleteDiscount(int discountId,[FromQuery] int actionPeformerId) {
             if(!_discountRepository.CheckIfDiscountExist(discountId)){
                 return NotFound();

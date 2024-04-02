@@ -14,6 +14,8 @@ namespace E_Commerce_Api.Interfaces
         bool UpdateInventory(Inventory inventory,int actionPeformerId, string referenceId);
         ICollection<Inventory> GetAllInventories();
 
+        Inventory GetOneInventory(int inventoryId);
+
         bool DeleteInventory(int inventoryId, int actionPeformerId, string referenceId);
         bool Save();
     }

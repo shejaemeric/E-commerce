@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240327135230_REMOVE USER IN ARCHIVE")]
-    partial class REMOVEUSERINARCHIVE
+    [Migration("20240328120831_initial migrations")]
+    partial class initialmigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1084,6 +1084,9 @@ namespace ECommerceApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Telephone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1093,6 +1096,8 @@ namespace ECommerceApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -1265,67 +1270,6 @@ namespace ECommerceApi.Migrations
                     b.ToTable("UserPayments_Archive");
                 });
 
-            modelBuilder.Entity("E_Commerce_Api.Models.UserRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersRoles");
-                });
-
-            modelBuilder.Entity("E_Commerce_Api.Models.UserRole_Archive", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Archive_Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PeformedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Peformed_At")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Record_Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Reference_Id")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UsersRoles_Archive");
-                });
-
             modelBuilder.Entity("E_Commerce_Api.Models.User_Archive", b =>
                 {
                     b.Property<int>("Id")
@@ -1372,6 +1316,9 @@ namespace ECommerceApi.Migrations
 
                     b.Property<string>("Reference_Id")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Telephone")
                         .IsRequired()
@@ -1511,6 +1458,17 @@ namespace ECommerceApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("E_Commerce_Api.Models.User", b =>
+                {
+                    b.HasOne("E_Commerce_Api.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("E_Commerce_Api.Models.UserAddress", b =>
                 {
                     b.HasOne("E_Commerce_Api.Models.User", "User")
@@ -1529,25 +1487,6 @@ namespace ECommerceApi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("E_Commerce_Api.Models.UserRole", b =>
-                {
-                    b.HasOne("E_Commerce_Api.Models.Role", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("E_Commerce_Api.Models.User", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
 
                     b.Navigation("User");
                 });
@@ -1593,7 +1532,7 @@ namespace ECommerceApi.Migrations
                 {
                     b.Navigation("RolePermissions");
 
-                    b.Navigation("UserRoles");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("E_Commerce_Api.Models.ShoppingSession", b =>
@@ -1612,8 +1551,6 @@ namespace ECommerceApi.Migrations
                     b.Navigation("UserAddresses");
 
                     b.Navigation("UserPayments");
-
-                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,7 +11,7 @@ namespace E_Commerce_Api.Repository
 {
     public class UserRepository : IUserRepository
     {
-                private readonly DataContext _context;
+        private readonly DataContext _context;
         public UserRepository(DataContext context)
         {
             _context = context;
@@ -69,13 +69,13 @@ namespace E_Commerce_Api.Repository
 
         public ICollection<User> GetAllUsersByRole(int roleId)
         {
-            return _context.UsersRoles.Where(ur => ur.RoleId == roleId).Select(u => u.User).ToList();
+            return _context.Users.Where(u => u.RoleId == roleId).ToList();
         }
 
         public ICollection<User> GetAllUsersByPermission(int permissionId)
         {
             var userRoles = _context.RolesPermissions.Where(rp => rp.PermissionId == permissionId).Select(p => p.RoleId).ToList();
-            return _context.UsersRoles.Where(ur => userRoles.Contains(ur.RoleId)).Select(u => u.User).ToList();
+            return _context.Users.Where(u => userRoles.Contains(u.RoleId)).ToList();
         }
 
         public bool DeleteUser(int userId, int actionPeformerId, string referenceId)
@@ -91,6 +91,11 @@ namespace E_Commerce_Api.Repository
                 Console.WriteLine(ex.Message);
                 return false;
             }
+        }
+
+        public bool IsUserOwner(int userId, int ownerId)
+        {
+            return userId == ownerId;
         }
     }
 }

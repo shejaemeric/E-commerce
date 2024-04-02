@@ -14,6 +14,8 @@ namespace E_Commerce_Api.Interfaces
 
         bool UpdateShoppingSession(int userId,ShoppingSession shoppingSession,int actionPeformerId, string referenceId);
         bool DeleteShoppingSession(int shoppingSessionId, int actionPeformerId, string referenceId);
+
+        bool IsShoppingSessionOwner(int userId,int shoppingSessionId);
         bool Save();
     }
 }

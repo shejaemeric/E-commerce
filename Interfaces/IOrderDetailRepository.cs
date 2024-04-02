@@ -20,6 +20,8 @@ namespace E_Commerce_Api.Interfaces
         bool UpdateOrderDetail(int userId,int paymentDetailId,OrderDetail orderDetail,int actionPeformerId, string referenceId);
 
         bool DeleteOrderDetail(int orderDetailId, int actionPeformerId, string referenceId);
+
+        bool IsOrderDetailOwner(int userId,int orderDetailId);
         bool Save();
     }
 }

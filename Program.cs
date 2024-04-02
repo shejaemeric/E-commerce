@@ -2,10 +2,18 @@ using System.Text.Json.Serialization;
 using  E_Commerce_Api.Models;
 using  E_Commerce_Api.Data;
 using  E_Commerce_Api.Seed;
+using E_Commerce_Api.helpers;
 using  E_Commerce_Api;
 using Microsoft.EntityFrameworkCore;
 using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +25,36 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+    });
+
+    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});
+
 
 builder.Services.AddScoped<ICartItemRepository,CartItemRepository>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
@@ -43,6 +81,60 @@ builder.Services.AddDbContext<DataContext>(options => {
 builder.Services.AddControllers().AddJsonOptions(X => X.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+
+
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
+
+    builder.Services.AddSingleton<IConfiguration>(configuration);
+
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = configuration["Jwt:Audience"],
+        ValidIssuer = configuration["Jwt:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"] ?? throw new ArgumentNullException("JWT:SecretKey")))
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy =>
+    {
+        policy.RequireRole("Admin");
+    });
+
+    options.AddPolicy("Manager", policy =>
+    {
+        policy.RequireRole("Manager");
+    });
+
+    options.AddPolicy("User", policy =>
+    {
+        policy.RequireRole("User");
+    });
+
+    options.AddPolicy("Admin/Manager", policy =>
+    {
+        policy.RequireRole("Admin","manager");
+    });
+
+    options.AddPolicy("Admin/Manager/Owner", policy =>
+    {
+        policy.RequireRole("Admin","manager");
+        policy.Requirements.Add(new UserAuthorizationRequirement());
+    });
+});
+
+
 var app = builder.Build();
 
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
@@ -64,6 +156,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 

@@ -7,11 +7,13 @@ using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RoleController : ControllerBase
     {
 
@@ -26,6 +28,8 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+
+        [Authorize(policy:"Admin")]
         public IActionResult CreateRole([FromBody] RoleDto roleCreate) {
             if (roleCreate == null)
                 return BadRequest(ModelState);
@@ -53,6 +57,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet()]
         [ProducesResponseType(200,Type = typeof(ICollection<Role>))]
         [ProducesResponseType(400)]
+
         public IActionResult GetAllRole()
         {
 
@@ -68,6 +73,8 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{roleId}")]
         [ProducesResponseType(200,Type = typeof(ICollection<Role>))]
         [ProducesResponseType(400)]
+        [Authorize(policy:"Admin")]
+
         public IActionResult GetOneRole(int roleId)
         {
             if(! _roleRepository.CheckIfRoleExist(roleId)){
@@ -85,6 +92,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+
+        [Authorize(policy:"Admin")]
         public IActionResult UpdateRole(int roleId,[FromBody] RoleDto roleUpdate)
         {
             if (roleUpdate == null)
@@ -110,6 +119,27 @@ namespace E_Commerce_Api.Controllers
             return NoContent();
         }
 
+
+        [HttpDelete("{roleId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin")]
+        public IActionResult DeleteRole(int roleId,[FromQuery] int actionPeformerId) {
+            if(!_roleRepository.CheckIfRoleExist(roleId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_roleRepository.DeleteRole(roleId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete Role");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("Role Deleted Successfully");
+         }
 
     }
 }

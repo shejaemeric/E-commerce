@@ -19,6 +19,8 @@ namespace E_Commerce_Api.Interfaces
         public bool UpdateOrderItem(int productId, int orderDetailId, OrderItem orderItem, int actionPeformerId, string referenceId);
 
         bool DeleteOrderItem(int orderItemId, int actionPeformerId, string referenceId);
+
+        bool IsOrderItemOwner(int userId,int orderItemId);
         bool Save();
     }
 }

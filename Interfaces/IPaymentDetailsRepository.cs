@@ -14,6 +14,8 @@ namespace E_Commerce_Api.Interfaces{
         bool CreatePaymentDetails(PaymentDetail paymentDetail);
 
         bool UpdatePaymentDetails(PaymentDetail paymentDetail,int actionPeformerId, string referenceId);
+
+        bool IsPaymentDetailOwner(int userId,int paymentDetailId);
         bool Save();
     }
 }

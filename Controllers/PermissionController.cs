@@ -7,11 +7,13 @@ using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+     [Authorize]
     public class PermissionController : ControllerBase
     {
 
@@ -26,6 +28,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin")]
         public IActionResult CreatePermission([FromBody] PermissionDto permissionCreate) {
             if (permissionCreate == null)
                 return BadRequest(ModelState);
@@ -53,6 +56,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet()]
         [ProducesResponseType(200,Type = typeof(ICollection<Permission>))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult GetAllPermission()
         {
 
@@ -68,6 +72,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{permissionId}")]
         [ProducesResponseType(200,Type = typeof(ICollection<Permission>))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult GetOnePermission(int permissionId)
         {
             if(! _permissionRepository.CheckIfPermissionExist(permissionId)){
@@ -85,6 +90,9 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "Admin")]
+
+        [Authorize(policy:"AdminOnly")]
         public IActionResult UpdatePermission(int permissionId,[FromBody] PermissionDto permissionUpdate)
         {
             if (permissionUpdate == null)
@@ -110,6 +118,27 @@ namespace E_Commerce_Api.Controllers
             return NoContent();
         }
 
+
+        [HttpDelete("{permissionId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin")]
+        public IActionResult DeletePermission(int permissionId,[FromQuery] int actionPeformerId) {
+            if(!_permissionRepository.CheckIfPermissionExist(permissionId)){
+                return NotFound();
+            }
+
+            Guid guid = Guid.NewGuid();
+            string referenceId = guid.ToString();
+
+            if (!_permissionRepository.DeletePermission(permissionId, actionPeformerId, referenceId)) {
+                ModelState.AddModelError("", "Error Occured While Trying To Delete Permission");
+                return StatusCode(500, ModelState);
+
+            }
+            return Ok("Permission Session Deleted Successfully");
+         }
 
     }
 }

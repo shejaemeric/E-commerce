@@ -22,8 +22,8 @@ namespace E_Commerce_Api.helpers {
             CreateMap<Permission, PermissionDto>().ReverseMap();
             CreateMap<Role,RoleDto>().ReverseMap();
             CreateMap<RolePermission, RolePermissionDto>().ReverseMap();
-            CreateMap<UserRole, UserRoleDto>().ReverseMap();
             CreateMap<PasswordResetToken, PasswordResetTokenDto>().ReverseMap();
+            CreateMap<CreateUserDto, User>().ReverseMap();
 
         }
     }

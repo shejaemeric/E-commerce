@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UserPaymentController : ControllerBase
     {
         public readonly IMapper _mapper;
@@ -56,10 +58,27 @@ namespace E_Commerce_Api.Controllers
             return Ok("Successfully Created");
         }
 
+
+        [HttpGet]
+        [ProducesResponseType(200,Type=typeof(IEnumerable<UserPayment>))]
+        [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
+        public IActionResult GetUserPaymentes()
+        {
+            var userPaymentes = _mapper.Map<List<UserPaymentDto>>(_userPaymentRepository.GetAllUserPayments());
+            if (!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            return Ok(userPaymentes);
+        }
+
+
         [HttpPut("{userPaymentId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult UpdateUserPayment(int userPaymentId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] UserPaymentDto userPaymentUpdate)
         {
             if (userPaymentUpdate == null)
@@ -88,10 +107,12 @@ namespace E_Commerce_Api.Controllers
             return NoContent();
         }
 
+
         [HttpPost("{UserPaymentId}")]
         [ProducesResponseType(200,Type = typeof(UserPayment))]
         [ProducesResponseType(400)]
 
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult GetOneUserPayment(int UserPaymentId)
         {
             if(!_userPaymentRepository.CheckIfUserPaymentExist(UserPaymentId)){
@@ -110,6 +131,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(UserPayment))]
         [ProducesResponseType(400)]
 
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult GetAllUserPaymentByUser(int userId)
         {
             if(!_userRepository.CheckIfUserExist(userId)){
@@ -127,6 +149,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult DeleteUserPayment(int userPaymentId,[FromQuery] int actionPeformerId) {
             if(!_userPaymentRepository.CheckIfUserPaymentExist(userPaymentId)){
                 return NotFound();

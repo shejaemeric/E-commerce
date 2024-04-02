@@ -24,5 +24,7 @@ namespace E_Commerce_Api.Interfaces
 
         bool DeletePasswordResetToken(PasswordResetToken passwordResetToken);
 
+        bool IsPasswordResetOwner(int passwordResetTokenId,int userId);
+
     }
 }

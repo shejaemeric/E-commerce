@@ -1,7 +1,7 @@
 using E_Commerce_Api.Models;
 namespace E_Commerce_Api.Dto
 {
-    public class UserDto
+    public class CreateUserDto
     {
         public int Id{ get; set; }
         public string Username { get; set; }
@@ -12,7 +12,7 @@ namespace E_Commerce_Api.Dto
 
            public string Telephone { get; set; }
 
-            public int RoleId { get; set; }
+
             public bool Is_active { get; set; }
             public DateTime Last_login { get; set; }
             public DateTime Created_At { get; set; }

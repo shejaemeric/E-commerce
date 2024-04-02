@@ -7,11 +7,13 @@ using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class PasswordResetTokenController : ControllerBase
     {
 
@@ -45,6 +47,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet("user/{userId}")]
         [ProducesResponseType(200,Type = typeof(ICollection<PasswordResetToken>))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult GetUnexpiredPasswordTokensByUser(int userId)
         {
 
@@ -106,7 +109,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult DeletePokemon(int passwordResetTokenId)
+        public IActionResult DeletePasswordResetToken(int passwordResetTokenId)
         {
             if (!_passwordResetTokenRepository.CheckIfPasswordResetTokenExist(passwordResetTokenId))
             {

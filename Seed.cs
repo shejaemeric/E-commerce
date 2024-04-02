@@ -163,7 +163,8 @@ namespace E_Commerce_Api.Seed
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
                 Is_active = true,
-                Last_login = DateTime.Now
+                Last_login = DateTime.Now,
+                RoleId = 2
             };
 
             var user1 = new User
@@ -175,21 +176,14 @@ namespace E_Commerce_Api.Seed
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
                 Is_active = true,
-                Last_login = DateTime.Now
+                Last_login = DateTime.Now,
+                RoleId = 1
             };
             context.Users.Add(user);
             context.Users.Add(user1);
             context.SaveChanges();
 
-            // Seed UserRoles
-            var userRoles = new[]
-            {
-                new UserRole { UserId = user.Id, RoleId = roles.Single(r => r.Name == "user").Id },
-                new UserRole { UserId = user1.Id, RoleId = roles.Single(r => r.Name == "user").Id }
-            };
 
-            context.UsersRoles.AddRange(userRoles);
-            context.SaveChanges();
 
 
             // Seed password reset

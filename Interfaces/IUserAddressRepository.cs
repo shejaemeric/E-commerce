@@ -20,6 +20,9 @@ bool Save();
         bool UpdateUserAddress(int userId,UserAddress userAddress,int actionPeformerId, string referenceId);
 
         bool DeleteUserAddress(int addressId, int actionPeformerId, string referenceId);
+
+        bool IsUserAddressOwner(int userId,int addressId);
         public ICollection<UserAddress> GetAllUserAddressByUser(int userId);
+        public ICollection<UserAddress> GetAllUserAddresses();
     }
 }

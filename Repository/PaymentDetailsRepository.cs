@@ -37,6 +37,14 @@ namespace E_Commerce_Api.Repository
         {
             return _context.PaymentDetails.FirstOrDefault(u => u.Id == paymentId);
         }
+
+        public bool IsPaymentDetailOwner(int userId, int paymentDetailId)
+        {
+            var orderDetail = _context.OrderDetails.Where(od => od.PaymentDetails.Id == paymentDetailId).FirstOrDefault();
+            if (orderDetail == null) return false;
+            return orderDetail.User.Id == userId;
+        }
+
         public bool Save()
         {
             return _context.SaveChanges() > 0;

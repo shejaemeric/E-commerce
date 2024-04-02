@@ -99,6 +99,13 @@ namespace E_Commerce_Api.Repository
                 return false;
             }
         }
+
+        public bool IsOrderItemOwner(int userId, int orderItemId)
+        {
+            var orderItem = _context.OrderItems.Find(orderItemId);
+            if (orderItem == null) return false;
+            return orderItem.OrderDetails.User.Id == userId;
+        }
     }
 
 }

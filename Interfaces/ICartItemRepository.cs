@@ -16,6 +16,7 @@ public interface ICartItemRepository
         bool UpdateCartItem(int productId,int shoppingSessionId,CartItem cartItem,int actionPeformerId, string referenceId);
 
         bool DeleteCartItem(int cartItemId, int actionPeformerId, string referenceId);
+        bool IsCartOwner(int userId,int cartItemId);
         bool Save();
 }
 }

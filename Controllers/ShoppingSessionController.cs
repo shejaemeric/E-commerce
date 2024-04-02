@@ -7,11 +7,13 @@ using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ShoppingSessionController : ControllerBase
     {
 
@@ -31,6 +33,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+
         public IActionResult CreateShoppingSession([FromQuery] int userId,[FromBody] ShoppingSessionDto shoppingSessionCreate) {
             if (shoppingSessionCreate == null)
                 return BadRequest(ModelState);
@@ -54,6 +57,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet("{UserId}")]
         [ProducesResponseType(200,Type = typeof(ShoppingSession))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
 
         public IActionResult GetLatestShoppingSession(int UserId)
         {
@@ -72,6 +76,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult UpdateShoppingSession(int shoppingSessionId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] ShoppingSessionDto shoppingSessionUpdate)
         {
             if (shoppingSessionUpdate == null)
@@ -104,7 +109,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult DeleteOrderDetails(int shoppingSessionId,[FromQuery] int actionPeformerId) {
+        [Authorize(Policy = "Admin/Manager/Owner")]
+        public IActionResult DeleteShoppingSession(int shoppingSessionId,[FromQuery] int actionPeformerId) {
             if(!_shoppingSessionRepository.CheckIfShoppingSessionExist(shoppingSessionId)){
                 return NotFound();
             }

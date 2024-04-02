@@ -19,6 +19,8 @@ namespace E_Commerce_Api.Interfaces
 
         bool UpdateRole(Role role);
 
+        bool DeleteRole(int roleId,int actionPeformerId, string referenceId);
+
         public ICollection<Role> GetAllRoles();
 
     }

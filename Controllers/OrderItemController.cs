@@ -7,11 +7,13 @@ using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce_Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+     [Authorize]
     public class OrderItemController : ControllerBase
     {
         private readonly IOrderItemRepository _orderItemRepository;
@@ -54,11 +56,10 @@ namespace E_Commerce_Api.Controllers
             return Ok("Successfully Created");
         }
 
-
-
         [HttpGet()]
         [ProducesResponseType(200,Type = typeof(ICollection<OrderItem>))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult GetAllOrderItems()
         {
 
@@ -73,6 +74,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{orderItemId}")]
         [ProducesResponseType(200,Type=typeof(OrderItem))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult GetOneOrderItem(int orderItemId)
         {
             if(! _orderItemRepository.CheckIfOrderItemExist(orderItemId)){
@@ -108,6 +110,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult UpdateOrderItem(int orderItemId,[FromQuery] int orderDetailId,[FromQuery] int actionPeformerId,[FromQuery] int productId,[FromBody] CreateOrderItemsDto orderItemUpdate) {
             if (orderItemUpdate == null)
                 return BadRequest(ModelState);
@@ -146,6 +149,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult DeleteOrderItem(int orderItemId,[FromQuery] int actionPeformerId) {
             if(!_orderItemRepository.CheckIfOrderItemExist(orderItemId)){
                 return NotFound();

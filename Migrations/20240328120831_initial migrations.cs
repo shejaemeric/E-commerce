@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ECommerceApi.Migrations
 {
     /// <inheritdoc />
-    public partial class firstMigration : Migration
+    public partial class initialmigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -431,23 +431,29 @@ namespace ECommerceApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "UserPayments_Archive",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Telephone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Isactive = table.Column<bool>(name: "Is_active", type: "bit", nullable: false),
-                    Lastlogin = table.Column<DateTime>(name: "Last_login", type: "datetime2", nullable: false),
+                    ArchiveId = table.Column<int>(name: "Archive_Id", type: "int", nullable: false),
+                    PaymentType = table.Column<string>(name: "Payment_Type", type: "nvarchar(max)", nullable: false),
+                    CardHolderName = table.Column<string>(name: "Card_Holder_Name", type: "nvarchar(max)", nullable: true),
+                    CardNumber = table.Column<long>(name: "Card_Number", type: "bigint", nullable: true),
+                    CVV = table.Column<int>(type: "int", nullable: true),
+                    ExpirationMonth = table.Column<int>(name: "Expiration_Month", type: "int", nullable: true),
+                    ExpirationYear = table.Column<int>(name: "Expiration_Year", type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(name: "Created_At", type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(name: "Modified_At", type: "datetime2", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PeformedAt = table.Column<DateTime>(name: "Peformed_At", type: "datetime2", nullable: false),
+                    PeformedById = table.Column<int>(type: "int", nullable: false),
+                    RecordType = table.Column<string>(name: "Record_Type", type: "nvarchar(max)", nullable: true),
+                    ReferenceId = table.Column<string>(name: "Reference_Id", type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_UserPayments_Archive", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -468,32 +474,13 @@ namespace ECommerceApi.Migrations
                     Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PeformedAt = table.Column<DateTime>(name: "Peformed_At", type: "datetime2", nullable: false),
                     PeformedById = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
                     RecordType = table.Column<string>(name: "Record_Type", type: "nvarchar(max)", nullable: true),
                     ReferenceId = table.Column<string>(name: "Reference_Id", type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users_Archive", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UsersRoles_Archive",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ArchiveId = table.Column<int>(name: "Archive_Id", type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PeformedAt = table.Column<DateTime>(name: "Peformed_At", type: "datetime2", nullable: false),
-                    PeformedById = table.Column<int>(type: "int", nullable: false),
-                    RecordType = table.Column<string>(name: "Record_Type", type: "nvarchar(max)", nullable: true),
-                    ReferenceId = table.Column<string>(name: "Reference_Id", type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UsersRoles_Archive", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -558,6 +545,33 @@ namespace ECommerceApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RolesPermissions_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telephone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Isactive = table.Column<bool>(name: "Is_active", type: "bit", nullable: false),
+                    Lastlogin = table.Column<DateTime>(name: "Last_login", type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(name: "Created_At", type: "datetime2", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(name: "Modified_At", type: "datetime2", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
@@ -680,64 +694,6 @@ namespace ECommerceApi.Migrations
                     table.PrimaryKey("PK_UserPayments", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserPayments_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserPayments_Archive",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ArchiveId = table.Column<int>(name: "Archive_Id", type: "int", nullable: false),
-                    PaymentType = table.Column<string>(name: "Payment_Type", type: "nvarchar(max)", nullable: false),
-                    CardHolderName = table.Column<string>(name: "Card_Holder_Name", type: "nvarchar(max)", nullable: true),
-                    CardNumber = table.Column<long>(name: "Card_Number", type: "bigint", nullable: true),
-                    CVV = table.Column<int>(type: "int", nullable: true),
-                    ExpirationMonth = table.Column<int>(name: "Expiration_Month", type: "int", nullable: true),
-                    ExpirationYear = table.Column<int>(name: "Expiration_Year", type: "int", nullable: true),
-                    CreatedAt = table.Column<DateTime>(name: "Created_At", type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PeformedAt = table.Column<DateTime>(name: "Peformed_At", type: "datetime2", nullable: false),
-                    PeformedById = table.Column<int>(type: "int", nullable: false),
-                    RecordType = table.Column<string>(name: "Record_Type", type: "nvarchar(max)", nullable: true),
-                    ReferenceId = table.Column<string>(name: "Reference_Id", type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserPayments_Archive", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserPayments_Archive_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UsersRoles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UsersRoles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UsersRoles_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UsersRoles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -879,19 +835,9 @@ namespace ECommerceApi.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserPayments_Archive_UserId",
-                table: "UserPayments_Archive",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersRoles_RoleId",
-                table: "UsersRoles",
+                name: "IX_Users_RoleId",
+                table: "Users",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersRoles_UserId",
-                table: "UsersRoles",
-                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -964,12 +910,6 @@ namespace ECommerceApi.Migrations
                 name: "Users_Archive");
 
             migrationBuilder.DropTable(
-                name: "UsersRoles");
-
-            migrationBuilder.DropTable(
-                name: "UsersRoles_Archive");
-
-            migrationBuilder.DropTable(
                 name: "ShoppingSessions");
 
             migrationBuilder.DropTable(
@@ -980,9 +920,6 @@ namespace ECommerceApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Permissions");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "PaymentDetails");
@@ -998,6 +935,9 @@ namespace ECommerceApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductCategories");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using E_Commerce_Api.Data;
 using E_Commerce_Api.Interfaces;
 using E_Commerce_Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce_Api.Repository
 {
@@ -24,6 +25,20 @@ namespace E_Commerce_Api.Repository
         {
             _context.Add(role);
             return Save();
+        }
+
+        public bool DeleteRole(int roleId,int actionPeformerId, string referenceId)
+        {
+            try {
+                string query = " Exec  [dbo].[proc_deleteRole] "  + roleId + "," + actionPeformerId + ", '" + referenceId + "'; ";
+                var cmd = _context.Database.ExecuteSqlRaw(query);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
 
         public ICollection<Role> GetAllRoles()
