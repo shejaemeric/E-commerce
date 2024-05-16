@@ -8,7 +8,7 @@ namespace E_Commerce_Api.Interfaces
 {
     public interface IShoppingSessionRepository
     {
-        ShoppingSession GetLatestShoppingSessionByUser(int userId);
+
         bool CheckIfShoppingSessionExist(int shoppingSessionId);
         bool CreateShoppingSession(int userId,ShoppingSession shoppingSession);
 
@@ -16,6 +16,7 @@ namespace E_Commerce_Api.Interfaces
         bool DeleteShoppingSession(int shoppingSessionId, int actionPeformerId, string referenceId);
 
         bool IsShoppingSessionOwner(int userId,int shoppingSessionId);
+        ICollection<CartItem> GetAllCartItemsBySession(int sessionId);
         bool Save();
     }
 }

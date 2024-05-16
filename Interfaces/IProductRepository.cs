@@ -11,6 +11,8 @@ namespace E_Commerce_Api.Interfaces
         ICollection<Product> GetAllProducts();
         ICollection<Product> GetProductsByCategory(int categoryId);
 
+
+
         ICollection<Product> GetProductsOnDiscount();
 
         ICollection<Product> GetProductsByDiscount(int discountId);
@@ -23,6 +25,7 @@ namespace E_Commerce_Api.Interfaces
          bool UpdateProduct(int discountId,int inventoryId,int productCategoryId,Product product,int actionPeformerId, string referenceId);
 
          bool DeleteProduct(int productId, int actionPeformerId, string referenceId);
+
         bool Save();
     }
 }

@@ -89,22 +89,6 @@ namespace E_Commerce_Api.Controllers
             return Ok(orderItem);
         }
 
-        [HttpPost("orderDetail/{orderDetailId}")]
-        [ProducesResponseType(200,Type=typeof(ICollection<OrderItem>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetAlllOrderItemByOrderDetail(int orderDetailId)
-        {
-            if(! _orderDetailRepository.CheckIfOrderDetailExist(orderDetailId)){
-                return NotFound();
-            }
-
-            var orderItems= _mapper.Map<List<OrderItem>>(_orderItemRepository.GetAllOrderItemsByOrder(orderDetailId));
-
-            if (!ModelState.IsValid){
-                return BadRequest(ModelState);
-            }
-            return Ok(orderItems);
-        }
 
         [HttpPut("{orderItemId}")]
         [ProducesResponseType(204)]

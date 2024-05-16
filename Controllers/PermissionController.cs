@@ -140,5 +140,26 @@ namespace E_Commerce_Api.Controllers
             return Ok("Permission Session Deleted Successfully");
          }
 
+        [HttpGet("{permissionId}/users")]
+        [ProducesResponseType(200,Type = typeof(ICollection<User>))]
+        [ProducesResponseType(400)]
+
+        [Authorize(Policy = "Admin/Manager")]
+
+        public IActionResult GetAllUsersWithPermission(int permissionId)
+        {
+            if(!_permissionRepository.CheckIfPermissionExist(permissionId)){
+                return NotFound();
+            }
+
+            var users = _mapper.Map<List<UserDto>>(_permissionRepository.GetAllUsersByPermission(permissionId));
+
+            if (!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            return Ok(users);
+        }
+
+
     }
 }

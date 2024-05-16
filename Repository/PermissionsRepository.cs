@@ -74,6 +74,11 @@ namespace E_Commerce_Api.Repository
             return _context.SaveChanges() > 0;
         }
 
+        public ICollection<User> GetAllUsersByPermission(int permissionId)
+        {
+            var userRoles = _context.RolesPermissions.Where(rp => rp.PermissionId == permissionId).Select(p => p.RoleId).ToList();
+            return _context.Users.Where(u => userRoles.Contains(u.RoleId)).ToList();
+        }
         public bool UpdatePermission(Permission permission)
         {
             _context.Update(permission);

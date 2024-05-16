@@ -14,6 +14,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authorization;
+using E_Commerce_Api.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.AddConsole();
+    loggingBuilder.AddDebug();
+});
  builder.Services.AddTransient<Seed>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -72,6 +79,9 @@ builder.Services.AddScoped<IProductRepository,ProductRepository>();
 builder.Services.AddScoped<IRoleRepository,RoleRepository>();
 builder.Services.AddScoped<IPermissionRepository,PermissionRepository>();
 builder.Services.AddScoped<IPasswordResetTokenRepository,PasswordResetTokenRepository>();
+builder.Services.AddTransient<IEmailService, EmailServices>();
+
+builder.Services.AddScoped<IAuthorizationHandler, CustomAuthorizationHandler>();
 
 
 builder.Services.AddDbContext<DataContext>(options => {
@@ -80,6 +90,8 @@ builder.Services.AddDbContext<DataContext>(options => {
 
 builder.Services.AddControllers().AddJsonOptions(X => X.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ITokenServices, TokenServices>();
 
 
 
@@ -129,7 +141,6 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("Admin/Manager/Owner", policy =>
     {
-        policy.RequireRole("Admin","manager");
         policy.Requirements.Add(new UserAuthorizationRequirement());
     });
 });
@@ -159,6 +170,8 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

@@ -1064,6 +1064,10 @@ namespace ECommerceApi.Migrations
                     b.Property<DateTime>("Created_At")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("Is_active")
                         .HasColumnType("bit");
 
@@ -1092,7 +1096,19 @@ namespace ECommerceApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Verification_Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Verified")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("VerifiedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
@@ -1285,6 +1301,10 @@ namespace ECommerceApi.Migrations
                     b.Property<DateTime>("Created_At")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("Is_active")
                         .HasColumnType("bit");
 
@@ -1325,7 +1345,19 @@ namespace ECommerceApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Verification_Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Verified")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("VerifiedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users_Archive");
                 });

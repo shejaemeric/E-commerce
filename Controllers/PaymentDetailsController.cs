@@ -63,17 +63,17 @@ namespace E_Commerce_Api.Controllers
             return Ok(paymentDetails);
         }
 
-        [HttpPost("{paymentId}")]
+        [HttpPost("{paymentDetailId}")]
         [ProducesResponseType(200,Type = typeof(PaymentDetail))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
-        public IActionResult GetOnePaymentDetail(int paymentId)
+        public IActionResult GetOnePaymentDetail(int paymentDetailId)
         {
-            if(! _paymentDetailsRepository.CheckIfPaymentDetailExist(paymentId)){
+            if(! _paymentDetailsRepository.CheckIfPaymentDetailExist(paymentDetailId)){
                 return NotFound();
             }
 
-            var paymentDetail= _mapper.Map<PaymentDetailsDto>(_paymentDetailsRepository.GetOnePaymentDetails(paymentId));
+            var paymentDetail= _mapper.Map<PaymentDetailsDto>(_paymentDetailsRepository.GetOnePaymentDetails(paymentDetailId));
 
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);

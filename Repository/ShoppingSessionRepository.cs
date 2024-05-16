@@ -48,9 +48,9 @@ namespace E_Commerce_Api.Repository
             }
         }
 
-        public ShoppingSession GetLatestShoppingSessionByUser(int userId)
+        public ICollection<CartItem> GetAllCartItemsBySession(int sessionId)
         {
-            return _context.ShoppingSessions.Where(c => c.User.Id == userId).OrderByDescending(ss => ss.Modified_At).FirstOrDefault();
+            return _context.CartItems.Where(ci => ci.ShoppingSession.Id == sessionId).Include(p=>p.Product).ToList();
         }
 
         public bool IsShoppingSessionOwner(int userId, int shoppingSessionId)

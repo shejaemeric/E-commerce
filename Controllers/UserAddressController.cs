@@ -92,27 +92,6 @@ namespace E_Commerce_Api.Controllers
 
 
 
-
-
-        [HttpGet("user/{userId}")]
-        [ProducesResponseType(200,Type = typeof(IEnumerable<UserAddress>))]
-        [ProducesResponseType(400)]
-        [Authorize(Policy = "Admin/Manager/Owner")]
-
-        public IActionResult GetAllUserAddressByUser(int userId)
-        {
-            if(!_userRepository.CheckIfUserExist(userId)){
-                return NotFound();
-             }
-            var paymentDetails = _mapper.Map<List<UserAddressDto>>(_userAddressRepository.GetAllUserAddressByUser(userId));
-
-            if (!ModelState.IsValid){
-                return BadRequest(ModelState);
-            }
-            return Ok(paymentDetails);
-        }
-
-
         [HttpPut("{userAddressId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]

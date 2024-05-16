@@ -92,5 +92,10 @@ namespace E_Commerce_Api.Repository
             if (address == null) return false;
             return address.User.Id == userId;
         }
+
+        public ICollection<UserAddress> GetAllUserAddresses()
+        {
+            return _context.UserAddresses.OrderBy(ua => ua.Id).ToList();
+        }
     }
 }

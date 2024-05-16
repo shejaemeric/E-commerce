@@ -1,0 +1,49 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/1.png",
+      "PackagePath": "staticwebassets/1.png"
+    },
+    {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/Uploads/products/1/Laptop-featured.png",
+      "PackagePath": "staticwebassets/Uploads/products/1/Laptop-featured.png"
+    },
+    {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/Uploads/products/1/Laptop-images-0.jpeg",
+      "PackagePath": "staticwebassets/Uploads/products/1/Laptop-images-0.jpeg"
+    },
+    {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/Uploads/products/1/Laptop-images-1.jpeg",
+      "PackagePath": "staticwebassets/Uploads/products/1/Laptop-images-1.jpeg"
+    },
+    {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/Uploads/products/1/Laptop-images-2.jpeg",
+      "PackagePath": "staticwebassets/Uploads/products/1/Laptop-images-2.jpeg"
+    },
+    {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/Uploads/products/1/Laptop-images.jpeg",
+      "PackagePath": "staticwebassets/Uploads/products/1/Laptop-images.jpeg"
+    },
+    {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/Uploads/products/2/NIVEA Cleaning Soap-featured.jpeg",
+      "PackagePath": "staticwebassets/Uploads/products/2/NIVEA Cleaning Soap-featured.jpeg"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.E-Commerce-Api.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.build.E-Commerce-Api.props",
+      "PackagePath": "build\\E-Commerce-Api.props"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.buildMultiTargeting.E-Commerce-Api.props",
+      "PackagePath": "buildMultiTargeting\\E-Commerce-Api.props"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.E-Commerce-Api.props",
+      "PackagePath": "buildTransitive\\E-Commerce-Api.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

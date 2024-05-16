@@ -2,13 +2,14 @@ using System.Net;
 using System.Security.Claims;
 using E_Commerce_Api.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace E_Commerce_Api.helpers
 {
 
     public class CustomAuthorizationHandler : AuthorizationHandler<UserAuthorizationRequirement>
     {
+
         private readonly IUserRepository _userRepository;
 
         private readonly IUserAddressRepository _userAddressRepository;
@@ -23,9 +24,11 @@ namespace E_Commerce_Api.helpers
         private readonly IOrderItemRepository _orderItemRepository;
 
         private readonly IPaymentDetailsRepository _paymentDetailsRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<CustomAuthorizationHandler> _logger;
+
 
         public CustomAuthorizationHandler(
-        DbContext context,
 
         IUserRepository userRepository,
 
@@ -40,7 +43,10 @@ namespace E_Commerce_Api.helpers
 
          IOrderItemRepository orderItemRepository,
 
-         IPaymentDetailsRepository paymentDetailsRepository
+         IPaymentDetailsRepository paymentDetailsRepository,
+         IHttpContextAccessor httpContextAccessor,
+         ILogger<CustomAuthorizationHandler> logger
+
 
         )
         {
@@ -52,25 +58,26 @@ namespace E_Commerce_Api.helpers
             _userPaymentRepository = userPaymentRepository;
             _shoppingSessionRepository = userShoppingSessionRepository;
             _paymentDetailsRepository = paymentDetailsRepository;
+            _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
 
         }
 
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserAuthorizationRequirement requirement)
         {
-            var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var path = context.Resource as string;
-            var pathSegments = path?.Split('/');
-            var resource = pathSegments?.Length > 3 ? pathSegments[3] : null;
+            var role = context.User.FindFirstValue(ClaimTypes.Role);
 
+            _logger.LogInformation(role);
 
-            var routeValues = context.Resource as Dictionary<string, object>;
-            if (routeValues == null)
-            {
-                context.Fail();
+            if (role == "Admin" || role == "Manage") {
+                context.Succeed(requirement);
                 return;
             }
 
+            var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var resource = _httpContextAccessor.HttpContext.GetRouteData().Values["controller"].ToString();
+            var routeValues = _httpContextAccessor.HttpContext.Request.RouteValues;
             switch (resource)
             {
                 case "CartItem":
@@ -106,7 +113,7 @@ namespace E_Commerce_Api.helpers
                         return;
                     }
                     break;
-                case "PasswordResetToken":
+                case "PasswordReset":
                     if (!routeValues.ContainsKey("passwordResetTokenId") || !_paymentDetailsRepository.IsPaymentDetailOwner(int.Parse(routeValues["passwordResetTokenId"]?.ToString()), int.Parse(userId)))
                     {
                         context.Fail();
@@ -146,6 +153,7 @@ namespace E_Commerce_Api.helpers
                     }
                     else
                     {
+
                         context.Succeed(requirement);
                         return;
                     }

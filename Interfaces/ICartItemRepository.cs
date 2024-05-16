@@ -8,7 +8,7 @@ namespace E_Commerce_Api.Interfaces
 {
 public interface ICartItemRepository
 {
-        ICollection<CartItem> GetAllCartItemsBySession(int sessionId);
+
 
         CartItem GetOneCartItem(int cartItemId);
         bool CheckIfCartItemExist(int cartItemId);

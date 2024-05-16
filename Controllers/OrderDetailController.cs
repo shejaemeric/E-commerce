@@ -75,22 +75,6 @@ namespace E_Commerce_Api.Controllers
         }
 
 
-        [HttpPost("user/{userId}")]
-        [ProducesResponseType(200,Type = typeof(ICollection<OrderDetail>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetAllOrderDetailsByUser(int userId)
-        {
-            if(! _userRepository.CheckIfUserExist(userId)){
-                return NotFound();
-            }
-            var orderDetails= _mapper.Map<List<OrderDetailsDto>>(_orderDetailRepository.GetAllOrderByUser(userId));
-
-            if (!ModelState.IsValid){
-                return BadRequest(ModelState);
-            }
-            return Ok(orderDetails);
-        }
-
 
         [HttpPost("{orderDetailId}")]
         [ProducesResponseType(200,Type = typeof(OrderDetail))]
@@ -108,6 +92,23 @@ namespace E_Commerce_Api.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(orderDetail);
+        }
+
+        [HttpPost("{orderDetailId}/orderItems")]
+        [ProducesResponseType(200,Type=typeof(ICollection<OrderItem>))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAlllOrderItemByOrderDetail(int orderDetailId)
+        {
+            if(! _orderDetailRepository.CheckIfOrderDetailExist(orderDetailId)){
+                return NotFound();
+            }
+
+            var orderItems= _mapper.Map<List<OrderItem>>(_orderDetailRepository.GetAllOrderItemsByOrder(orderDetailId));
+
+            if (!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            return Ok(orderItems);
         }
 
         [HttpPut("{orderDetailId}")]

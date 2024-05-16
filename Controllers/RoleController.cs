@@ -141,5 +141,26 @@ namespace E_Commerce_Api.Controllers
             return Ok("Role Deleted Successfully");
          }
 
+        [HttpGet("{roleId}/users")]
+        [ProducesResponseType(200,Type = typeof(ICollection<User>))]
+        [ProducesResponseType(400)]
+
+        [Authorize(Policy = "Admin/Manager")]
+        public IActionResult GetAllUsersWithRole(int roleId)
+        {
+            if(!_roleRepository.CheckIfRoleExist(roleId)){
+                return NotFound();
+            }
+
+            var users = _mapper.Map<List<UserDto>>(_roleRepository.GetAllUsersByRole(roleId));
+
+            if (!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            return Ok(users);
+        }
+
+
+
     }
 }

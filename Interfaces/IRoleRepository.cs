@@ -21,6 +21,9 @@ namespace E_Commerce_Api.Interfaces
 
         bool DeleteRole(int roleId,int actionPeformerId, string referenceId);
 
+        public ICollection<User> GetAllUsersByRole(int roleId);
+
+
         public ICollection<Role> GetAllRoles();
 
     }

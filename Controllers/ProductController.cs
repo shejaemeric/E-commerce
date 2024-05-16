@@ -8,6 +8,7 @@ using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.ObjectModel;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -20,23 +21,26 @@ namespace E_Commerce_Api.Controllers
     public readonly IDiscountRepository _discountRepository;
 
     public readonly IProductCategoryRepository _productCategoryRepository;
-     public readonly IInvetoryRepository _inventoryRepository;
-      public readonly IProductRepository _productRepository;
+    public readonly IInvetoryRepository _inventoryRepository;
+    public readonly IProductRepository _productRepository;
+    public readonly IWebHostEnvironment _environment;
 
-        public ProductController( IMapper mapper,IInvetoryRepository inventoryRepository,IUserRepository userRepository,IDiscountRepository discountRepository,IProductCategoryRepository productCategoryRepository,IProductRepository productRepository)
+
+        public ProductController(IWebHostEnvironment environment, IMapper mapper,IInvetoryRepository inventoryRepository,IUserRepository userRepository,IDiscountRepository discountRepository,IProductCategoryRepository productCategoryRepository,IProductRepository productRepository)
         {
             _mapper=mapper; _userRepository=userRepository;
             _discountRepository=discountRepository;
             _productCategoryRepository=productCategoryRepository;
             _productRepository = productRepository;
             _inventoryRepository = inventoryRepository;
+            _environment = environment;
         }
 
 
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-         [Authorize(Policy = "Admin/Manager/Owner")]
+        [Authorize(Policy = "Admin/Manager")]
         public IActionResult CreateProduct([FromQuery] int discountId,[FromQuery] int productCategoryId,[FromQuery] int InventoryId,[FromBody] ProductDto productCreate) {
             if (productCreate == null)
                 return BadRequest(ModelState);
@@ -72,7 +76,7 @@ namespace E_Commerce_Api.Controllers
 
 
         [HttpGet]
-        [ProducesResponseType(200,Type=typeof(IEnumerable<Product>))]
+        [ProducesResponseType(200,Type=typeof(IEnumerable<ProductDto>))]
         [ProducesResponseType(400)]
         public IActionResult GetAllProducts()
         {
@@ -83,10 +87,8 @@ namespace E_Commerce_Api.Controllers
             return Ok(products);
         }
 
-
-
         [HttpPost("{productId}")]
-        [ProducesResponseType(200,Type = typeof(Product))]
+        [ProducesResponseType(200,Type = typeof(ProductOneDto))]
         [ProducesResponseType(400)]
         public IActionResult GetOneProduct(int productId)
         {
@@ -94,11 +96,32 @@ namespace E_Commerce_Api.Controllers
                 return NotFound();
             }
 
-            var product = _mapper.Map<ProductDto>(_productRepository.GetOneProduct(productId));
+            var product = _mapper.Map<ProductOneDto>(_productRepository.GetOneProduct(productId));
 
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);
             }
+
+            // string imageUrl = string.Empty;
+            // string hostUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+            // try {
+            //     string dirPath = _environment.WebRootPath + "/Uploads/products/" + productId;
+            //     string[] files = Directory.GetFiles(dirPath, product.Name + "-featured" + ".*");
+            //     if (files.Length > 0) product.FeaturedImage = hostUrl + "/Uploads/products/"+productId+"/"+ Path.GetFileName(files[0]);
+            //  } catch {
+            //     Console.WriteLine("An Error Occured");
+            //  }
+
+            string imageUrl = string.Empty;
+            string hostUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+            try {
+                string dirPath = _environment.WebRootPath + "/Uploads/products/" + productId;
+                string[] files = Directory.GetFiles(dirPath);
+                if (files.Length > 0) product.Images = files;
+             } catch {
+                Console.WriteLine("An Error Occured");
+             }
+
             return Ok(product);
         }
 
@@ -132,7 +155,7 @@ namespace E_Commerce_Api.Controllers
             return Ok(product);
         }
 
-        [HttpGet("/category/{category_id}")]
+        [HttpGet("category/{category_id}")]
         [ProducesResponseType(200,Type = typeof(ICollection<Product>))]
         [ProducesResponseType(400)]
         public IActionResult GetProductsByCategory(int category_id)
@@ -192,7 +215,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-         [Authorize(Policy = "Admin/Manager/Owner")]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult DeleteProduct(int productId,[FromQuery] int actionPeformerId) {
             if(!_productRepository.CheckIfProductExist(productId)){
                 return NotFound();
@@ -212,6 +235,107 @@ namespace E_Commerce_Api.Controllers
             }
             return Ok("Product Deleted Successfully");
          }
+
+
+        [HttpPost("{productId}/featuredImage/upload")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200)]
+        [Authorize(Policy = "Admin/Manager")]
+        public async Task<IActionResult> UploadFeaturedImage(int productId, IFormFile featuredImage)
+        {
+            try {
+
+                var product = _productRepository.GetOneProduct(productId);
+
+                if (product == null) {
+                    var message = new { message = "product Doesn't Exist" };
+                    return NotFound(message);
+                }
+
+                string productImagesFolder = _environment.WebRootPath + "/Uploads/products/" + productId;
+
+                if (!System.IO.Directory.Exists(productImagesFolder)) {
+                    System.IO.Directory.CreateDirectory(productImagesFolder);
+                }
+
+
+                var splitName = featuredImage.FileName.Split(".");
+                var name = product.Name + "-featured." + splitName[splitName.Length-1];
+                string imagePath = productImagesFolder + "/" + name;
+
+                if (!System.IO.File.Exists(imagePath)) {
+                    System.IO.File.Delete(imagePath);
+                }
+                using (FileStream stream = System.IO.File.Create(imagePath)) {
+                    await featuredImage.CopyToAsync(stream);
+                    string homePath = $"{this.Request.Scheme}://{this.Request.Host}";
+                    var result = new { message = "Successfully Uploaded", file = homePath+"/Uploads/products/"+productId+"/"+name };
+                    return Ok(result);
+                }
+            } catch  {
+                return StatusCode(500, "An Error Occured While Uploading");
+            }
+        }
+
+        [HttpPost("{productId}/images/upload")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200)]
+        [Authorize(Policy = "Admin/Manager")]
+        public async Task<IActionResult> UploadOtherImages(int productId, IFormFileCollection images)
+        {
+            try {
+
+                var product = _productRepository.GetOneProduct(productId);
+
+                if (product == null) {
+                    var message = new { message = "product Doesn't Exist" };
+                    return NotFound(message);
+                }
+
+                string productImagesFolder = _environment.WebRootPath + "/Uploads/products/" + productId;
+
+                if (!System.IO.Directory.Exists(productImagesFolder)) {
+                    System.IO.Directory.CreateDirectory(productImagesFolder);
+                }
+
+                var status = new {
+                    Uploaded = new Collection<object>(),
+                    Failed = new List<string>()
+
+                };
+
+
+                for (int i = 0; i<images.Count;i++) {
+                    var splitName = images[i].FileName.Split(".");
+                    var name = product.Name + "-images-" + i + "." + splitName[splitName.Length-1];
+                    string imagePath = productImagesFolder + "/" + name;
+
+                    if (!System.IO.File.Exists(imagePath)) {
+                        System.IO.File.Delete(imagePath);
+                    }
+                    try {
+                        using (FileStream stream = System.IO.File.Create(imagePath))
+                        {
+                            await images[i].CopyToAsync(stream);
+                            string homePath = $"{this.Request.Scheme}://{this.Request.Host}";
+                            var addedImage = new
+                            {
+                                name = images[i].FileName,
+                                link = homePath+"/Uploads/products/"+productId+"/"+name
+                            };
+                            status.Uploaded.Add(addedImage);
+                        }
+
+                    } catch {
+
+                        status.Failed.Add(images[i].FileName);
+                    }
+                }
+            return Ok(new { result = status });
+            } catch  {
+                return StatusCode(500, "An Error Occured While Uploading");
+            }
+        }
 
 
     }

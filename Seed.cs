@@ -164,6 +164,8 @@ namespace E_Commerce_Api.Seed
                 Modified_At = DateTime.Now,
                 Is_active = true,
                 Last_login = DateTime.Now,
+                Email = "shejaemeric22@gmail.com",
+                Verification_Token = "none",
                 RoleId = 2
             };
 
@@ -177,6 +179,8 @@ namespace E_Commerce_Api.Seed
                 Modified_At = DateTime.Now,
                 Is_active = true,
                 Last_login = DateTime.Now,
+                Email = "shejaemeri21@gmail.com",
+                Verification_Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InNoZWphZW1lcmljMDUxQGdtYWlsLmNvbSIsIm5iZiI6MTcxMzg4NzQwNywiZXhwIjoxNzE0MDYwMjA3LCJpYXQiOjE3MTM4ODc0MDd9.pU66mO_sdBQ5AP4UvsEdbT7DVB8sRkoBS2h3SgeWawU",
                 RoleId = 1
             };
             context.Users.Add(user);

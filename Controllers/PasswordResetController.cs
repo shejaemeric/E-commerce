@@ -44,25 +44,10 @@ namespace E_Commerce_Api.Controllers
         }
 
 
-        [HttpGet("user/{userId}")]
-        [ProducesResponseType(200,Type = typeof(ICollection<PasswordResetToken>))]
-        [ProducesResponseType(400)]
-        [Authorize(Policy = "Admin/Manager/Owner")]
-        public IActionResult GetUnexpiredPasswordTokensByUser(int userId)
-        {
-
-            var passwordResetTokens= _mapper.Map<List<PasswordResetTokenDto>>(_passwordResetTokenRepository.GetUnexpiredPasswordResetTokensByUser(userId));
-
-            if (!ModelState.IsValid){
-                return BadRequest(ModelState);
-            }
-            return Ok(passwordResetTokens);
-        }
-
-
         [HttpGet("{passwordResetTokenId}")]
         [ProducesResponseType(200,Type = typeof(ICollection<PasswordResetToken>))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult GetOnePasswordResetToken(int passwordResetTokenId)
         {
             if(! _passwordResetTokenRepository.CheckIfPasswordResetTokenExist(passwordResetTokenId)){
@@ -80,6 +65,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult UpdatePasswordResetToken(int passwordResetTokenId,[FromBody] PasswordResetTokenDto passwordResetTokenUpdate)
         {
             if (passwordResetTokenUpdate == null)
@@ -109,6 +95,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult DeletePasswordResetToken(int passwordResetTokenId)
         {
             if (!_passwordResetTokenRepository.CheckIfPasswordResetTokenExist(passwordResetTokenId))

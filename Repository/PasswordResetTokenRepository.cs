@@ -39,10 +39,6 @@ namespace E_Commerce_Api.Repository
             return _context.PasswordResetTokens.FirstOrDefault(pt => pt.Id == passwordResetTokenId);
         }
 
-        public ICollection<PasswordResetToken> GetUnexpiredPasswordResetTokensByUser(int userId)
-        {
-           return _context.PasswordResetTokens.Where(pt => pt.User.Id == userId && pt.Expiration < DateTime.Now).ToList();
-        }
 
         public bool IsPasswordResetOwner(int passwordResetTokenId, int userId)
         {

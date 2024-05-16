@@ -68,16 +68,16 @@ namespace E_Commerce_Api.Controllers
 
 
 
-        [HttpPost("{productId}")]
+        [HttpPost("{productCategoryId}")]
         [ProducesResponseType(200,Type = typeof(ProductCategory))]
         [ProducesResponseType(400)]
-        public IActionResult GetOneProductCategory(int productId)
+        public IActionResult GetOneProductCategory(int productCategoryId)
         {
-            if(! _productCategoryRepository.CheckIfProductCategoryExist(productId)){
+            if(! _productCategoryRepository.CheckIfProductCategoryExist(productCategoryId)){
                 return NotFound();
             }
 
-            var productCategory = _mapper.Map<ProductCategoryDto>(_productCategoryRepository.GetOneProductCategory(productId));
+            var productCategory = _mapper.Map<ProductCategoryDto>(_productCategoryRepository.GetOneProductCategory(productCategoryId));
 
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);

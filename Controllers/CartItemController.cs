@@ -58,22 +58,6 @@ namespace E_Commerce_Api.Controllers
             return Ok("Successfully Created");
         }
 
-        [HttpPost("session/{sessionId}")]
-        [ProducesResponseType(200,Type = typeof(ICollection<CartItem>))]
-        [ProducesResponseType(400)]
-        [Authorize(Policy = "Admin/Manager")]
-        public IActionResult GetAllCartItemsBySession(int sessionId)
-        {
-            if(! _shoppingSessionRepository.CheckIfShoppingSessionExist(sessionId)){
-                return NotFound();
-            }
-            var cartItems= _mapper.Map<List<CartItemDto>>(_cartItemRepository.GetAllCartItemsBySession(sessionId));
-
-            if (!ModelState.IsValid){
-                return BadRequest(ModelState);
-            }
-            return Ok(cartItems);
-        }
 
         [HttpPost("{cartItemId}")]
         [ProducesResponseType(200,Type = typeof(CartItem))]

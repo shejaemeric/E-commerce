@@ -7,14 +7,17 @@ using E_Commerce_Api.Data;
 using E_Commerce_Api.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace E_Commerce_Api.Repository
 {
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
-        public UserRepository(DataContext context)
+                private readonly ITokenServices _tokenServices;
+        public UserRepository(DataContext context,ITokenServices tokenServices)
         {
             _context = context;
+            _tokenServices = tokenServices;
         }
 
         public bool CheckIfUserExist(int userId)
@@ -45,10 +48,15 @@ namespace E_Commerce_Api.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool CreateUser(User user)
+        public string CreateUser(User user)
         {
+            user.Verification_Token = _tokenServices.GenerateToken(user.Email);
             _context.Add(user);
-            return Save();
+
+            if (Save()) {
+                return user.Verification_Token;
+            }
+            return "" ;
         }
 
         public bool UpdateUser( User user,int actionPeformerId, string referenceId)
@@ -67,16 +75,6 @@ namespace E_Commerce_Api.Repository
 
         }
 
-        public ICollection<User> GetAllUsersByRole(int roleId)
-        {
-            return _context.Users.Where(u => u.RoleId == roleId).ToList();
-        }
-
-        public ICollection<User> GetAllUsersByPermission(int permissionId)
-        {
-            var userRoles = _context.RolesPermissions.Where(rp => rp.PermissionId == permissionId).Select(p => p.RoleId).ToList();
-            return _context.Users.Where(u => userRoles.Contains(u.RoleId)).ToList();
-        }
 
         public bool DeleteUser(int userId, int actionPeformerId, string referenceId)
         {
@@ -93,9 +91,27 @@ namespace E_Commerce_Api.Repository
             }
         }
 
+        public ICollection<OrderDetail> GetAllOrderByUser(int userId)
+        {
+            return _context.OrderDetails.Where(od => od.User.Id == userId).Include(p=>p.PaymentDetails).ToList();
+        }
+
+        public ShoppingSession GetLatestShoppingSessionByUser(int userId)
+        {
+            return _context.ShoppingSessions.Where(c => c.User.Id == userId).OrderByDescending(ss => ss.Modified_At).FirstOrDefault();
+        }
+
+
+
         public bool IsUserOwner(int userId, int ownerId)
         {
             return userId == ownerId;
         }
+
+        public ICollection<PasswordResetToken> GetUnexpiredPasswordResetTokensByUser(int userId)
+        {
+           return _context.PasswordResetTokens.Where(pt => pt.User.Id == userId && pt.Expiration < DateTime.Now).ToList();
+        }
+
     }
 }

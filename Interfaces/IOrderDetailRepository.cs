@@ -8,8 +8,6 @@ namespace E_Commerce_Api.Interfaces
 {
     public interface IOrderDetailRepository
     {
-
-        ICollection<OrderDetail> GetAllOrderByUser(int userId);
         OrderDetail GetOneOrderDetail(int orderId);
 
         ICollection<OrderDetail> GetAllOrders();
@@ -20,6 +18,8 @@ namespace E_Commerce_Api.Interfaces
         bool UpdateOrderDetail(int userId,int paymentDetailId,OrderDetail orderDetail,int actionPeformerId, string referenceId);
 
         bool DeleteOrderDetail(int orderDetailId, int actionPeformerId, string referenceId);
+
+        ICollection<OrderItem> GetAllOrderItemsByOrder(int orderDetailId);
 
         bool IsOrderDetailOwner(int userId,int orderDetailId);
         bool Save();

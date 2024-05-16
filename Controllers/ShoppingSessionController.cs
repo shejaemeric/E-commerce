@@ -54,23 +54,25 @@ namespace E_Commerce_Api.Controllers
             return Ok("Successfully Created");
         }
 
-        [HttpGet("{UserId}")]
-        [ProducesResponseType(200,Type = typeof(ShoppingSession))]
+
+
+        [HttpPost("{shoppingSessionId}/cartItems")]
+        [ProducesResponseType(200,Type = typeof(ICollection<CartItem>))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager/Owner")]
-
-        public IActionResult GetLatestShoppingSession(int UserId)
+        public IActionResult GetAllCartItemsBySession(int shoppingSessionId)
         {
-            if(!_userRepository.CheckIfUserExist(UserId)){
+            if(! _shoppingSessionRepository.CheckIfShoppingSessionExist(shoppingSessionId)){
                 return NotFound();
-             }
-            var session = _mapper.Map<ShoppingSessionDto>(_shoppingSessionRepository.GetLatestShoppingSessionByUser(UserId));
+            }
+            var cartItems= _mapper.Map<List<CartItemDto>>(_shoppingSessionRepository.GetAllCartItemsBySession(shoppingSessionId));
 
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);
             }
-            return Ok(session);
+            return Ok(cartItems);
         }
+
 
         [HttpPut("{shoppingSessionId}")]
         [ProducesResponseType(400)]

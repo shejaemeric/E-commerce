@@ -38,8 +38,9 @@ namespace E_Commerce_Api.Controllers
         [Authorize(Policy = "Admin/Manager")]
         public IActionResult CreateUser([FromBody] CreateUserDto userCreate) {
             if (userCreate == null)
+            {
                 return BadRequest(ModelState);
-
+            }
 
             var user = _userRepository.GetAllUsers().Where(c => c.Username == userCreate.Username).FirstOrDefault();
 
@@ -54,8 +55,8 @@ namespace E_Commerce_Api.Controllers
             var userMap = _mapper.Map<User>(userCreate);
             userMap.RoleId = 3;
 
-
-            if (!_userRepository.CreateUser(userMap)) {
+            var token = _userRepository.CreateUser(userMap);
+            if (token== "") {
                 ModelState.AddModelError("", "Error Occured While Trying To Save");
                 return StatusCode(500, ModelState);
             }
@@ -86,6 +87,7 @@ namespace E_Commerce_Api.Controllers
         [Authorize(Policy = "Admin/Manager/Owner")]
         public IActionResult GetOneUser(int userId)
         {
+             Console.WriteLine("_________________________________________________________");
             if(! _userRepository.CheckIfUserExist(userId)){
                 return NotFound();
             }
@@ -137,6 +139,41 @@ namespace E_Commerce_Api.Controllers
             return Ok(paymentDetails);
         }
 
+        [HttpPost("{userId}/orderdetails")]
+        [Authorize(Policy = "Admin/Manager/Owner")]
+        [ProducesResponseType(200,Type = typeof(ICollection<OrderDetail>))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAllOrderDetailsByUser(int userId)
+        {
+            if(! _userRepository.CheckIfUserExist(userId)){
+                return NotFound();
+            }
+            var orderDetails= _mapper.Map<List<OrderDetailsDto>>(_userRepository.GetAllOrderByUser(userId));
+
+            if (!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            return Ok(orderDetails);
+        }
+
+        [HttpGet("{UserId}/latestShoppingSession")]
+        [ProducesResponseType(200,Type = typeof(ShoppingSession))]
+        [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
+
+        public IActionResult GetLatestShoppingSession(int UserId)
+        {
+            if(!_userRepository.CheckIfUserExist(UserId)){
+                return NotFound();
+             }
+            var session = _mapper.Map<ShoppingSessionDto>(_userRepository.GetLatestShoppingSessionByUser(UserId));
+
+            if (!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            return Ok(session);
+        }
+
 
         [HttpPut("{userId}")]
         [ProducesResponseType(400)]
@@ -171,6 +208,8 @@ namespace E_Commerce_Api.Controllers
             return NoContent();
         }
 
+
+
         [HttpDelete("{userId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]
@@ -197,48 +236,21 @@ namespace E_Commerce_Api.Controllers
             return Ok("User Deleted Successfully");
          }
 
-        [HttpGet("roles/{roleId}")]
-        [ProducesResponseType(200,Type = typeof(ICollection<User>))]
+        [HttpGet("user/{userId}")]
+        [ProducesResponseType(200,Type = typeof(ICollection<PasswordResetToken>))]
         [ProducesResponseType(400)]
-
-        [Authorize(policy:"AdminOnly")]
-        [Authorize(policy:"ManagerOnly")]
-
-        [Authorize(Policy = "Admin/Manager")]
-        public IActionResult GetAllUsersWithRole(int roleId)
+        [Authorize(Policy = "Admin/Manager/Owner")]
+        public IActionResult GetUnexpiredPasswordTokensByUser(int userId)
         {
-            if(!_roleRepository.CheckIfRoleExist(roleId)){
-                return NotFound();
-            }
 
-            var users = _mapper.Map<List<UserDto>>(_userRepository.GetAllUsersByRole(roleId));
+            var passwordResetTokens= _mapper.Map<List<PasswordResetTokenDto>>(_userRepository.GetUnexpiredPasswordResetTokensByUser(userId));
 
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);
             }
-            return Ok(users);
+            return Ok(passwordResetTokens);
         }
 
-
-        [HttpGet("permissions/{permissionId}")]
-        [ProducesResponseType(200,Type = typeof(ICollection<User>))]
-        [ProducesResponseType(400)]
-
-        [Authorize(Policy = "Admin/Manager")]
-
-        public IActionResult GetAllUsersWithPermission(int permissionId)
-        {
-            if(!_permissionRepository.CheckIfPermissionExist(permissionId)){
-                return NotFound();
-            }
-
-            var users = _mapper.Map<List<UserDto>>(_userRepository.GetAllUsersByPermission(permissionId));
-
-            if (!ModelState.IsValid){
-                return BadRequest(ModelState);
-            }
-            return Ok(users);
-        }
 
     }
 }

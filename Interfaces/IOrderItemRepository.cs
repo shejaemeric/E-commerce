@@ -12,7 +12,6 @@ namespace E_Commerce_Api.Interfaces
         OrderItem GetOneOrderItem(int OrderItemtId);
         bool CheckIfOrderItemExist(int orderItemId);
 
-        ICollection<OrderItem> GetAllOrderItemsByOrder(int orderDetailId);
 
         bool CreateOrderItem(int productId,int orderDetailId,OrderItem orderItem);
 

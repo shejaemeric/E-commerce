@@ -127,24 +127,6 @@ namespace E_Commerce_Api.Controllers
         }
 
 
-        [HttpGet("user/{userId}")]
-        [ProducesResponseType(200,Type = typeof(UserPayment))]
-        [ProducesResponseType(400)]
-
-        [Authorize(Policy = "Admin/Manager/Owner")]
-        public IActionResult GetAllUserPaymentByUser(int userId)
-        {
-            if(!_userRepository.CheckIfUserExist(userId)){
-                return NotFound();
-             }
-            var paymentDetails = _mapper.Map<List<UserPaymentDto>>(_userPaymentRepository.GetAllUserPaymentByUser(userId));
-
-            if (!ModelState.IsValid){
-                return BadRequest(ModelState);
-            }
-            return Ok(paymentDetails);
-        }
-
         [HttpDelete("{userPaymentId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(200)]

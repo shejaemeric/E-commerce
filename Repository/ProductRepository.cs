@@ -12,9 +12,11 @@ namespace E_Commerce_Api.Repository
     public class ProductRepository : IProductRepository
     {
         private readonly DataContext _context;
-        public  ProductRepository(DataContext context)
+        private readonly IWebHostEnvironment _environment;
+        public ProductRepository(DataContext context,IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _environment = webHostEnvironment;
         }
 
         public bool CheckIfProductExist(int productId)
@@ -65,6 +67,7 @@ namespace E_Commerce_Api.Repository
         {
             return _context.Products.Where(p=>p.Is_deleted == false).OrderBy(p => p.Id).ToList();
         }
+
 
         public Product GetOneProduct(int productId)
         {
@@ -122,5 +125,7 @@ namespace E_Commerce_Api.Repository
             }
 
         }
+
+
     }
 }

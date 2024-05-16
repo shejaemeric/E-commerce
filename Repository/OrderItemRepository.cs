@@ -32,10 +32,7 @@ namespace E_Commerce_Api.Repository
             return _context.OrderItems.Where(oi => oi.Id == OrderItemtId).Include(p => p.Product).FirstOrDefault();
         }
 
-        public ICollection<OrderItem> GetAllOrderItemsByOrder(int orderDetailId)
-        {
-            return _context.OrderItems.Where(od => od.OrderDetails.Id == orderDetailId).Include(p => p.Product).ToList();
-        }
+
         public bool Save()
         {
             return _context.SaveChanges() > 0;

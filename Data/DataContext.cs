@@ -66,6 +66,9 @@ namespace E_Commerce_Api.Data
                 .Property(s => s.Sub_total)
                 .HasColumnType("decimal(18, 2)");
 
+                modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+
+
                 // Archives
 
 
@@ -103,6 +106,8 @@ namespace E_Commerce_Api.Data
                     .WithMany(p=>p.Products)
                     .HasForeignKey(p => p.DiscountId)
                     .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<User_Archive>().HasIndex(u => u.Email).IsUnique();
 
         }
     }

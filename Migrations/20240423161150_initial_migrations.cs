@@ -462,10 +462,14 @@ namespace ECommerceApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ArchiveId = table.Column<int>(name: "Archive_Id", type: "int", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VerificationToken = table.Column<string>(name: "Verification_Token", type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VerifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Verified = table.Column<bool>(type: "bit", nullable: true),
                     Telephone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(name: "Created_At", type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(name: "Modified_At", type: "datetime2", nullable: false),
@@ -558,9 +562,13 @@ namespace ECommerceApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VerificationToken = table.Column<string>(name: "Verification_Token", type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Telephone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VerifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Verified = table.Column<bool>(type: "bit", nullable: true),
                     Isactive = table.Column<bool>(name: "Is_active", type: "bit", nullable: false),
                     Lastlogin = table.Column<DateTime>(name: "Last_login", type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(name: "Created_At", type: "datetime2", nullable: false),
@@ -835,9 +843,21 @@ namespace ECommerceApi.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Archive_Email",
+                table: "Users_Archive",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />

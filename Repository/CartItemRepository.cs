@@ -42,10 +42,6 @@ namespace E_Commerce_Api.Repository
 
 
 
-        public ICollection<CartItem> GetAllCartItemsBySession(int sessionId)
-        {
-            return _context.CartItems.Where(ci => ci.ShoppingSession.Id == sessionId).Include(p=>p.Product).ToList();
-        }
 
         public CartItem GetOneCartItem(int cartItemId)
         {

@@ -20,7 +20,7 @@ namespace E_Commerce_Api.Interfaces
 
         bool UpdatePasswordResetToken(PasswordResetToken passwordResetToken);
 
-        public ICollection<PasswordResetToken> GetUnexpiredPasswordResetTokensByUser(int userId);
+
 
         bool DeletePasswordResetToken(PasswordResetToken passwordResetToken);
 

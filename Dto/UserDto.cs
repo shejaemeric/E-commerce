@@ -8,6 +8,8 @@ namespace E_Commerce_Api.Dto
 
          public string Password { get; set; }
 
+         public string Email { get; set; }
+
           public string Name { get; set; }
 
            public string Telephone { get; set; }

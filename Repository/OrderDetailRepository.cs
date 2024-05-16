@@ -60,10 +60,6 @@ namespace E_Commerce_Api.Repository
             }
         }
 
-        public ICollection<OrderDetail> GetAllOrderByUser(int userId)
-        {
-            return _context.OrderDetails.Where(od => od.User.Id == userId).Include(p=>p.PaymentDetails).ToList();
-        }
 
 
         public ICollection<OrderDetail> GetAllOrders()
@@ -86,6 +82,10 @@ namespace E_Commerce_Api.Repository
         public bool Save()
         {
             return _context.SaveChanges() > 0;
+        }
+        public ICollection<OrderItem> GetAllOrderItemsByOrder(int orderDetailId)
+        {
+            return _context.OrderItems.Where(od => od.OrderDetails.Id == orderDetailId).Include(p => p.Product).ToList();
         }
 
         public bool UpdateOrderDetail( int userId, int paymentDetailId, OrderDetail orderDetail,int actionPeformerId, string referenceId)

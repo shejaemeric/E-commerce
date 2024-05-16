@@ -27,6 +27,12 @@ namespace E_Commerce_Api.Repository
             return Save();
         }
 
+
+        public ICollection<User> GetAllUsersByRole(int roleId)
+        {
+            return _context.Users.Where(u => u.RoleId == roleId).ToList();
+        }
+
         public bool DeleteRole(int roleId,int actionPeformerId, string referenceId)
         {
             try {
