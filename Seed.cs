@@ -156,9 +156,9 @@ namespace E_Commerce_Api.Seed
             // Seed Users
             var user = new User
             {
-                Username = "MRS. Jane Doe",
-                Password = "password",
-                Name = "John Doe",
+                Username = "shema@123",
+                Password = "$2a$11$4J8rWrKJBG3O8FZrvEI8pePHafGACZ9RWwV.8NP6Iy7HJniKN65yi",
+                Name = "SHEMA Fabrice",
                 Telephone = "+250784339373",
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
@@ -171,20 +171,36 @@ namespace E_Commerce_Api.Seed
 
             var user1 = new User
             {
-                Username = "MR. John Doe",
-                Password = "password1",
-                Name = "John Doe",
+                Username = "sibo@123",
+                Password = "$2a$11$4J8rWrKJBG3O8FZrvEI8pePHafGACZ9RWwV.8NP6Iy7HJniKN65yi",
+                Name = "SIBOMANA Eric",
                 Telephone = "+250786219583",
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
                 Is_active = true,
                 Last_login = DateTime.Now,
-                Email = "shejaemeri21@gmail.com",
+                Email = "siboEric@gmail.com",
+                Verification_Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InNoZWphZW1lcmljMDUxQGdtYWlsLmNvbSIsIm5iZiI6MTcxMzg4NzQwNywiZXhwIjoxNzE0MDYwMjA3LCJpYXQiOjE3MTM4ODc0MDd9.pU66mO_sdBQ5AP4UvsEdbT7DVB8sRkoBS2h3SgeWawU",
+                RoleId = 3
+            };
+
+            var user2 = new User
+            {
+                Username = "shejaemeric051",
+                Password = "$2a$11$4J8rWrKJBG3O8FZrvEI8pePHafGACZ9RWwV.8NP6Iy7HJniKN65yi",
+                Name = "SHEJA Emeric",
+                Telephone = "+250786219583",
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now,
+                Is_active = true,
+                Last_login = DateTime.Now,
+                Email = "shejaemeric051@gmail.com",
                 Verification_Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InNoZWphZW1lcmljMDUxQGdtYWlsLmNvbSIsIm5iZiI6MTcxMzg4NzQwNywiZXhwIjoxNzE0MDYwMjA3LCJpYXQiOjE3MTM4ODc0MDd9.pU66mO_sdBQ5AP4UvsEdbT7DVB8sRkoBS2h3SgeWawU",
                 RoleId = 1
             };
             context.Users.Add(user);
             context.Users.Add(user1);
+            context.Users.Add(user2);
             context.SaveChanges();
 
 
@@ -286,8 +302,17 @@ namespace E_Commerce_Api.Seed
 
             var productCategory1 = new ProductCategory
             {
-                Name = "Cleaning Supplies",
-                Desc = "Cleaning Supplies category description",
+                Name = "Phone",
+                Desc = "Samsung And IPhone",
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now
+            };
+
+
+            var productCategory2 = new ProductCategory
+            {
+                Name = "Gaming",
+                Desc = "Playstation and Consoles",
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now
             };
@@ -340,10 +365,10 @@ namespace E_Commerce_Api.Seed
             // Seed Product
             var product = new Product
             {
-                Name = "Laptop",
-                Desc = "Laptop description",
+                Name = "HP EliteBook 5030m",
+                Desc = "laptop hp 2020",
                 SKU = "ABC123",
-                Price = 99,
+                Price = 990000,
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
                 ProductCategory = productCategory,
@@ -356,13 +381,45 @@ namespace E_Commerce_Api.Seed
 
             var product1 = new Product
             {
-                Name = "NIVEA Cleaning Soap",
-                Desc = "Laptop description",
+                Name = "IPhone 13",
+                Desc = "IPhone 2021",
                 SKU = "ZZK123",
-                Price = 39,
+                Price = 640000,
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
                 ProductCategory = productCategory1,
+                Discount = discount1, // Assign the discount to the product
+                Inventory = inventory1,
+                In_stock = true,
+                Is_deleted = false,
+                Deleted_At = DateTime.Now,
+            };
+
+            var product2 = new Product
+            {
+                Name = "M2 MacBook 2022",
+                Desc = "MacBook Laptop",
+                SKU = "ABC12003",
+                Price = 1300000,
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now,
+                ProductCategory = productCategory1,
+                Discount = discount, // Assign the discount to the product
+                Inventory = inventory,
+                In_stock = true,
+                Is_deleted = false,
+                 Deleted_At = DateTime.Now,
+            };
+
+            var product3 = new Product
+            {
+                Name = "PS4 Gaming Console",
+                Desc = "PS4 2019",
+                SKU = "ZZK123",
+                Price = 480000,
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now,
+                ProductCategory = productCategory2,
                 Discount = discount1, // Assign the discount to the product
                 Inventory = inventory1,
                 In_stock = true,
@@ -393,10 +450,32 @@ namespace E_Commerce_Api.Seed
                 Modified_At = DateTime.Now,
                 Product = product1,
                 ShoppingSession = shoppingSession1,
-                Sub_total=20
+                Sub_total=200
+            };
+
+            var cartItem2 = new CartItem
+            {
+                Quantity = 1,
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now,
+                Product = product2,
+                ShoppingSession = shoppingSession,
+                Sub_total=100
+            };
+
+            var cartItem3 = new CartItem
+            {
+                Quantity = 1,
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now,
+                Product = product3,
+                ShoppingSession = shoppingSession1,
+                Sub_total=200
             };
             context.CartItems.Add(cartItem);
             context.CartItems.Add(cartItem1);
+            context.CartItems.Add(cartItem2);
+            context.CartItems.Add(cartItem3);
             context.SaveChanges();
 
             // Seed PaymentDetails
@@ -427,8 +506,23 @@ namespace E_Commerce_Api.Seed
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now
             };
+
+            var paymentDetails2 = new PaymentDetail
+            {
+                Amount = 104000,
+                Status = "Paid",
+                Payment_Type = "Credit Card",
+                Card_Holder_Name = "SHEJA Emeric",
+                Card_Number = 444567890123456,
+                CVV = 223,
+                Expiration_Month = 1,
+                Expiration_Year = 2027,
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now
+            };
             context.PaymentDetails.Add(paymentDetails);
             context.PaymentDetails.Add(paymentDetails1);
+            context.PaymentDetails.Add(paymentDetails2);
             context.SaveChanges();
 
             // Seed OrderDetails
@@ -450,11 +544,25 @@ namespace E_Commerce_Api.Seed
                 PaymentDetails = paymentDetails1,
                 Status = "pending"
             };
+
+            var orderDetails2 = new OrderDetail
+            {
+                Total = 4,
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now,
+                User = user2,
+                PaymentDetails = paymentDetails2,
+                Status = "pending"
+            };
+
             context.OrderDetails.Add(orderDetails);
             context.OrderDetails.Add(orderDetails1);
+            context.OrderDetails.Add(orderDetails2);
             context.SaveChanges();
 
             // Seed OrderItems
+
+            //user
             var orderItem = new OrderItem
             {
                 Quantity = 1,
@@ -465,14 +573,56 @@ namespace E_Commerce_Api.Seed
             };
             var orderItem1 = new OrderItem
             {
-                Quantity = 4,
+                Quantity = 1,
                 Created_At = DateTime.Now,
                 Modified_At = DateTime.Now,
                 Product = product1,
+                OrderDetails = orderDetails
+            };
+
+
+            //user1
+            var orderItem2 = new OrderItem
+            {
+                Quantity = 2,
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now,
+                Product = product2,
                 OrderDetails = orderDetails1
+            };
+
+            //user2
+            var orderItem3 = new OrderItem
+            {
+                Quantity = 1,
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now,
+                Product = product,
+                OrderDetails = orderDetails2
+            };
+            var orderItem4 = new OrderItem
+            {
+                Quantity = 1,
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now,
+                Product = product1,
+                OrderDetails = orderDetails2
+            };
+
+            var orderItem5 = new OrderItem
+            {
+                Quantity = 1,
+                Created_At = DateTime.Now,
+                Modified_At = DateTime.Now,
+                Product = product2,
+                OrderDetails = orderDetails2
             };
             context.OrderItems.Add(orderItem);
             context.OrderItems.Add(orderItem1);
+            context.OrderItems.Add(orderItem2);
+            context.OrderItems.Add(orderItem3);
+            context.OrderItems.Add(orderItem4);
+            context.OrderItems.Add(orderItem5);
             context.SaveChanges();
             }
         }

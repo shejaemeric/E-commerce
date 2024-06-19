@@ -13,6 +13,7 @@ using E_Commerce_Api.Models;
 using E_Commerce_Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -48,6 +49,7 @@ namespace E_Commerce_Api.Controllers
             [ProducesResponseType(200)]
             [ProducesResponseType(400)]
 
+            [SwaggerOperation(Summary = "Registering Normal User and Get Token (Anyone)")]
             public IActionResult Register([FromBody] CreateUserDto userRegister) {
                 if(_userRepository.GetAllUsers().Any(c => c.Username == userRegister.Username)) {
                     ModelState.AddModelError("Error", "Username Already Exists");
@@ -65,7 +67,7 @@ namespace E_Commerce_Api.Controllers
                 }
                  userRegister.Password = BCrypt.Net.BCrypt.HashPassword(userRegister.Password);
                  var userRegisterMap = _mapper.Map<User>(userRegister);
-                 userRegisterMap.RoleId = 3;
+                 userRegisterMap.RoleId = 1;
 
                  userRegisterMap.Verified = false;
 
@@ -80,10 +82,36 @@ namespace E_Commerce_Api.Controllers
 
             }
 
+
+
+
+            [HttpGet("{userId}/resend-verification-token")]
+            [ProducesResponseType(204)]
+            [ProducesResponseType(200)]
+            [ProducesResponseType(400)]
+            [SwaggerOperation(Summary = "Resend Verification Token (Anyone)")]
+            public  IActionResult ResendVerificationToken(int userId) {
+                if(!_userRepository.CheckIfUserExist(userId)) {
+                    return NotFound("User not Found");
+                }
+
+
+                if (!ModelState.IsValid) {
+                    return BadRequest(ModelState);
+                }
+
+                User user = _userRepository.GetOneUsers(userId);
+
+                _emailService.SendVerificationEmail(user,user.Verification_Token);
+                 return Ok("verification link has been sent");
+
+            }
+
+
             [HttpPost("login")]
             [ProducesResponseType(200)]
             [ProducesResponseType(400)]
-
+            [SwaggerOperation(Summary = "Login and Get Token (Anyone)")]
             public IActionResult Login([FromBody] UserLoginDto userlogin) {
                 if (!_userRepository.GetAllUsers().Any(c => c.Username == userlogin.Username)) {
                     ModelState.AddModelError("", "User Not Found");
@@ -108,8 +136,6 @@ namespace E_Commerce_Api.Controllers
             roles[1] = "Admin";
             roles[2] = "Manager";
             roles[3] = "User";
-
-            Console.WriteLine(_configuration);
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, (user.Id).ToString()),
@@ -130,10 +156,11 @@ namespace E_Commerce_Api.Controllers
 
                 return new JwtSecurityTokenHandler().WriteToken(token);
             }
-                [HttpGet("comfirmEmail")]
+
+            [HttpGet("comfirmEmail")]
             [ProducesResponseType(200)]
             [ProducesResponseType(400)]
-
+            [SwaggerOperation(Summary = "Verify User Email (Anyone)")]
             public IActionResult ComfirmEmail(string UserEmail,string Token) {
 
                 var user = _userRepository.GetAllUsers().Where(c => c.Email == UserEmail).FirstOrDefault();

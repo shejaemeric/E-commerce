@@ -41,7 +41,7 @@ namespace E_Commerce_Api.Repository
 
         public ICollection<UserAddress> GetAllUserAddressesByUser(int userId)
         {
-            return _context.UserAddresses.OrderBy(ua => ua.User.Id == userId).ToList();
+            return _context.UserAddresses.Where(ua => ua.User.Id == userId).ToList();
         }
         public bool Save()
         {
@@ -61,6 +61,10 @@ namespace E_Commerce_Api.Repository
 
         public bool UpdateUser( User user,int actionPeformerId, string referenceId)
         {
+            var oldUser = _context.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+            user.RoleId = oldUser.RoleId;
+            _context.ChangeTracker.Clear();
+
             try  {
                 string query = " Exec  [dbo].[proc_updateUser] "  + user.Id + "," + actionPeformerId + ", '" + referenceId + "'; ";
                 var cmd = _context.Database.ExecuteSqlRaw(query);
@@ -113,5 +117,13 @@ namespace E_Commerce_Api.Repository
            return _context.PasswordResetTokens.Where(pt => pt.User.Id == userId && pt.Expiration < DateTime.Now).ToList();
         }
 
+        public bool UpdateUserRole(int userId, int RoleId)
+        {
+            var user = new User { Id = userId };
+            _context.Users.Attach(user);
+            user.RoleId = RoleId;
+            _context.Entry(user).Property(u => u.RoleId).IsModified = true;
+            return Save();
+        }
     }
 }

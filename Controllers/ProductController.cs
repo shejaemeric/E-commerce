@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.ObjectModel;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -41,7 +42,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
-        public IActionResult CreateProduct([FromQuery] int discountId,[FromQuery] int productCategoryId,[FromQuery] int InventoryId,[FromBody] ProductDto productCreate) {
+        [SwaggerOperation(Summary = "Create a Product (Admin/Manager)")]
+        public IActionResult CreateProduct([FromQuery] int productCategoryId,[FromQuery] int InventoryId,[FromBody] ProductDto productCreate,[FromQuery] int? discountId) {
             if (productCreate == null)
                 return BadRequest(ModelState);
 
@@ -52,8 +54,10 @@ namespace E_Commerce_Api.Controllers
             if(!_productCategoryRepository.CheckIfProductCategoryExist(productCategoryId)){
                 return NotFound(new {errorMessage = "Product Category not found"});
             }
-            if(!_discountRepository.CheckIfDiscountExist(discountId)){
-                return NotFound(new {errorMessage = "Discount not found"});
+            if (discountId != null){
+                if (!_discountRepository.CheckIfDiscountExist(discountId)){
+                    return NotFound(new {errorMessage = "Discount not found"});
+                }
             }
 
             var product = _productRepository.GetAllProducts().Where(c => c.Name == productCreate.Name).FirstOrDefault();
@@ -67,7 +71,7 @@ namespace E_Commerce_Api.Controllers
 
             var productMap = _mapper.Map<Product>(productCreate);
 
-            if (!_productRepository.CreateProduct(discountId,InventoryId,productCategoryId,productMap)) {
+            if (!_productRepository.CreateProduct(InventoryId,productCategoryId,productMap,discountId)) {
                 ModelState.AddModelError("", "Error Occured While Trying To save");
                 return StatusCode(500, ModelState);
             }
@@ -78,6 +82,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet]
         [ProducesResponseType(200,Type=typeof(IEnumerable<ProductDto>))]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Get All Products (Anyone)")]
         public IActionResult GetAllProducts()
         {
             var products = _mapper.Map<List<ProductDto>>(_productRepository.GetAllProducts());
@@ -90,6 +95,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{productId}")]
         [ProducesResponseType(200,Type = typeof(ProductOneDto))]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Get One Product (Anyone)")]
         public IActionResult GetOneProduct(int productId)
         {
             if(! _productRepository.CheckIfProductExist(productId)){
@@ -128,6 +134,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet("on-discount")]
         [ProducesResponseType(200,Type = typeof(ICollection<Product>))]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Get Products On Discount (Anyone)")]
         public IActionResult GetProductsOnDiscount()
         {
             var products = _mapper.Map<List<ProductDto>>(_productRepository.GetProductsOnDiscount());
@@ -141,6 +148,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("discount/{discountId}")]
         [ProducesResponseType(200,Type = typeof(ICollection<Product>))]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Get Products By Discount (Anyone)")]
         public IActionResult GetProductsByDiscount(int discountId)
         {
             if(! _discountRepository.CheckIfDiscountExist(discountId)){
@@ -158,6 +166,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet("category/{category_id}")]
         [ProducesResponseType(200,Type = typeof(ICollection<Product>))]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Get Products By Discount (Anyone)")]
         public IActionResult GetProductsByCategory(int category_id)
         {
             if(! _productCategoryRepository.CheckIfProductCategoryExist(category_id)){
@@ -176,6 +185,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Update a Product (Admin/Manager/Owner)")]
         public IActionResult UpdateProduct(int productId,[FromQuery] int discountId,[FromQuery] int productCategoryId,[FromQuery] int actionPeformerId,[FromQuery] int InventoryId,[FromBody] ProductDto productUpdate) {
             if (productUpdate == null)
                 return BadRequest(ModelState);
@@ -216,6 +226,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Delete a Product (Admin/Manager/Owner)")]
         public IActionResult DeleteProduct(int productId,[FromQuery] int actionPeformerId) {
             if(!_productRepository.CheckIfProductExist(productId)){
                 return NotFound();
@@ -241,6 +252,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Upload Featured Image / saved On Server (Admin/Manager)")]
         public async Task<IActionResult> UploadFeaturedImage(int productId, IFormFile featuredImage)
         {
             try {
@@ -281,6 +293,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Upload other images of a Product (Admin/Manager/Owner)")]
         public async Task<IActionResult> UploadOtherImages(int productId, IFormFileCollection images)
         {
             try {

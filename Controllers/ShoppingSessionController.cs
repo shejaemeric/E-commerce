@@ -8,6 +8,7 @@ using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -33,7 +34,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-
+        [SwaggerOperation(Summary = "Create Shopping Session (Anyone)")]
         public IActionResult CreateShoppingSession([FromQuery] int userId,[FromBody] ShoppingSessionDto shoppingSessionCreate) {
             if (shoppingSessionCreate == null)
                 return BadRequest(ModelState);
@@ -60,6 +61,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(ICollection<CartItem>))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Get All Cart Item Selected in a Shopping Session (Admin/Manager/Owner)")]
         public IActionResult GetAllCartItemsBySession(int shoppingSessionId)
         {
             if(! _shoppingSessionRepository.CheckIfShoppingSessionExist(shoppingSessionId)){
@@ -79,6 +81,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Update a Shopping Session (Admin/Manager/Owner)")]
         public IActionResult UpdateShoppingSession(int shoppingSessionId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] ShoppingSessionDto shoppingSessionUpdate)
         {
             if (shoppingSessionUpdate == null)
@@ -112,6 +115,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+
+        [SwaggerOperation(Summary = "Delete a Shopping Session (Admin/Manager/Owner)")]
         public IActionResult DeleteShoppingSession(int shoppingSessionId,[FromQuery] int actionPeformerId) {
             if(!_shoppingSessionRepository.CheckIfShoppingSessionExist(shoppingSessionId)){
                 return NotFound();

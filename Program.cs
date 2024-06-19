@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
 using E_Commerce_Api.Services;
+using QuestPDF.Infrastructure;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+QuestPDF.Settings.License = LicenseType.Community;
+QuestPDF.Settings.EnableDebugging = true;
+
 builder.Services.AddLogging(loggingBuilder =>
 {
     loggingBuilder.AddConsole();
@@ -31,11 +35,11 @@ builder.Services.AddLogging(loggingBuilder =>
  builder.Services.AddTransient<Seed>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(opt =>
 {
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Online Shop", Version = "v1" });
+    opt.EnableAnnotations();
     opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -78,6 +82,8 @@ builder.Services.AddScoped<IProductCategoryRepository,ProductCategoryRepository>
 builder.Services.AddScoped<IProductRepository,ProductRepository>();
 builder.Services.AddScoped<IRoleRepository,RoleRepository>();
 builder.Services.AddScoped<IPermissionRepository,PermissionRepository>();
+builder.Services.AddScoped<IReportRepository,ReportRepository>();
+
 builder.Services.AddScoped<IPasswordResetTokenRepository,PasswordResetTokenRepository>();
 builder.Services.AddTransient<IEmailService, EmailServices>();
 
@@ -86,6 +92,7 @@ builder.Services.AddScoped<IAuthorizationHandler, CustomAuthorizationHandler>();
 
 builder.Services.AddDbContext<DataContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.EnableSensitiveDataLogging();
 });
 
 builder.Services.AddControllers().AddJsonOptions(X => X.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

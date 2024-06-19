@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[4.0.3, )"
             },
+            "FastReport.OpenSource": {
+              "target": "Package",
+              "version": "[2024.2.1, )"
+            },
             "MailKit": {
               "target": "Package",
               "version": "[4.5.0, )"
@@ -87,9 +91,17 @@
               "target": "Package",
               "version": "[7.0.0, )"
             },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2024.3.10, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.5.0, )"
+              "version": "[6.6.1, )"
+            },
+            "Swashbuckle.AspNetCore.Annotations": {
+              "target": "Package",
+              "version": "[6.6.1, )"
             }
           },
           "imports": [

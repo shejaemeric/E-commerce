@@ -8,6 +8,7 @@ using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -30,6 +31,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
 
         [Authorize(policy:"Admin")]
+        [SwaggerOperation(Summary = "Create A Role (Admin)")]
         public IActionResult CreateRole([FromBody] RoleDto roleCreate) {
             if (roleCreate == null)
                 return BadRequest(ModelState);
@@ -57,7 +59,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet()]
         [ProducesResponseType(200,Type = typeof(ICollection<Role>))]
         [ProducesResponseType(400)]
-
+        [SwaggerOperation(Summary = "Get All Roles (Admin)")]
         public IActionResult GetAllRole()
         {
 
@@ -74,7 +76,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(ICollection<Role>))]
         [ProducesResponseType(400)]
         [Authorize(policy:"Admin")]
-
+        [SwaggerOperation(Summary = "Create One Role By Id (Admin)")]
         public IActionResult GetOneRole(int roleId)
         {
             if(! _roleRepository.CheckIfRoleExist(roleId)){
@@ -94,6 +96,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(404)]
 
         [Authorize(policy:"Admin")]
+        [SwaggerOperation(Summary = "Update a Role (Admin)")]
         public IActionResult UpdateRole(int roleId,[FromBody] RoleDto roleUpdate)
         {
             if (roleUpdate == null)
@@ -125,6 +128,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin")]
+
+        [SwaggerOperation(Summary = "Delete a Role (Admin)")]
         public IActionResult DeleteRole(int roleId,[FromQuery] int actionPeformerId) {
             if(!_roleRepository.CheckIfRoleExist(roleId)){
                 return NotFound();
@@ -146,6 +151,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
 
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Get All users Based by Role (Admin/Manager)")]
         public IActionResult GetAllUsersWithRole(int roleId)
         {
             if(!_roleRepository.CheckIfRoleExist(roleId)){

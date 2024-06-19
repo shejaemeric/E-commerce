@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/.DS_Store",
+      "PackagePath": "staticwebassets/.DS_Store"
+    },
+    {
       "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/1.png",
       "PackagePath": "staticwebassets/1.png"
     },
@@ -27,6 +31,18 @@
     {
       "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/Uploads/products/2/NIVEA Cleaning Soap-featured.jpeg",
       "PackagePath": "staticwebassets/Uploads/products/2/NIVEA Cleaning Soap-featured.jpeg"
+    },
+    {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/Uploads/products/3/prod 2-featured.png",
+      "PackagePath": "staticwebassets/Uploads/products/3/prod 2-featured.png"
+    },
+    {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/Uploads/products/3/prod 2-images-0.png",
+      "PackagePath": "staticwebassets/Uploads/products/3/prod 2-images-0.png"
+    },
+    {
+      "Id": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/wwwroot/Uploads/products/3/prod 2-images-1.png",
+      "PackagePath": "staticwebassets/Uploads/products/3/prod 2-images-1.png"
     },
     {
       "Id": "obj/Debug/net7.0/staticwebassets/msbuild.E-Commerce-Api.Microsoft.AspNetCore.StaticWebAssets.props",

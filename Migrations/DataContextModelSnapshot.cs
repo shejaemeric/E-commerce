@@ -1303,7 +1303,7 @@ namespace ECommerceApi.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Is_active")
                         .HasColumnType("bit");
@@ -1355,9 +1355,6 @@ namespace ECommerceApi.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.ToTable("Users_Archive");
                 });

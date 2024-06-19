@@ -8,6 +8,7 @@ using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -30,6 +31,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Create a discount (Admin/Manager)")]
         public IActionResult CreateDiscount([FromBody] DiscountDto discountCreate) {
             if (discountCreate == null)
                 return BadRequest(ModelState);
@@ -57,6 +59,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet()]
         [ProducesResponseType(200,Type = typeof(ICollection<Discount>))]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Get All Discounts (Anyone)")]
         public IActionResult GetAllDiscount()
         {
 
@@ -72,6 +75,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{discountId}")]
         [ProducesResponseType(200,Type = typeof(ICollection<Discount>))]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Get One Discount (Anyone)")]
         public IActionResult GetOneDiscount(int discountId)
         {
             if(! _discountRepository.CheckIfDiscountExist(discountId)){
@@ -90,6 +94,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Update One Discount (Admin/Manager)")]
         public IActionResult UpdateDiscount(int discountId,[FromBody] DiscountDto discountUpdate,[FromQuery] int actionPeformerId)
         {
             if (discountUpdate == null)
@@ -124,6 +129,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Delete One Discount (Admin/Manager)")]
         public IActionResult DeleteDiscount(int discountId,[FromQuery] int actionPeformerId) {
             if(!_discountRepository.CheckIfDiscountExist(discountId)){
                 return NotFound();

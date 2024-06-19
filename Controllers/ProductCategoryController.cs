@@ -8,6 +8,7 @@ using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -30,6 +31,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Create a Product Category (Admin/Manager)")]
         public IActionResult CreateProductCategory([FromBody] ProductCategoryDto productCategoryCreate) {
             if (productCategoryCreate == null)
                 return BadRequest(ModelState);
@@ -57,6 +59,7 @@ namespace E_Commerce_Api.Controllers
         [HttpGet]
         [ProducesResponseType(200,Type=typeof(IEnumerable<ProductCategoryDto>))]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Get All Product Category (Anyone)")]
         public IActionResult GetAllProductCategories()
         {
             var productCategories = _mapper.Map<List<ProductCategoryDto>>(_productCategoryRepository.GetAllProductCategories());
@@ -71,6 +74,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{productCategoryId}")]
         [ProducesResponseType(200,Type = typeof(ProductCategory))]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Get One Product Category (Anyone)")]
         public IActionResult GetOneProductCategory(int productCategoryId)
         {
             if(! _productCategoryRepository.CheckIfProductCategoryExist(productCategoryId)){
@@ -90,6 +94,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Update one Product Category (Admin/Manager)")]
         public IActionResult UpdateProductCategory(int productCategoryId,[FromBody] ProductCategoryDto productCategoryUpdate,[FromQuery] int actionPeformerId)
         {
             if (productCategoryUpdate == null)
@@ -124,6 +129,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Delete one Product Category (Admin/Manager)")]
         public IActionResult DeleteProductCategory(int productCategoryId,[FromQuery] int actionPeformerId) {
             if(!_productCategoryRepository.CheckIfProductCategoryExist(productCategoryId)){
                 return NotFound();

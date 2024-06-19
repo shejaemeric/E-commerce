@@ -67,6 +67,7 @@ namespace E_Commerce_Api.helpers
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserAuthorizationRequirement requirement)
         {
             var role = context.User.FindFirstValue(ClaimTypes.Role);
+            Console.WriteLine(role);
 
             _logger.LogInformation(role);
 
@@ -147,7 +148,7 @@ namespace E_Commerce_Api.helpers
                     }
                     break;
                 case "User":
-                    if (!routeValues.ContainsKey("userId") || !_userRepository.IsUserOwner(int.Parse(routeValues["userId"]?.ToString()), int.Parse(userId)))
+                    if (!routeValues.ContainsKey("userId") || routeValues["userId"]?.ToString() != userId)
                     {
                         context.Fail();
                     }

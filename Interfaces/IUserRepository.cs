@@ -13,9 +13,6 @@ namespace E_Commerce_Api.Interfaces
         ICollection<UserAddress> GetAllUserAddressesByUser(int userId);
 
         ICollection<UserPayment> GetAllUserPaymentsByUser(int userId);
-
-
-
         User GetOneUsers(int userId);
 
         bool CheckIfUserExist(int userId);
@@ -29,6 +26,8 @@ namespace E_Commerce_Api.Interfaces
         bool IsUserOwner(int userId,int ownerId);
 
         ICollection<OrderDetail> GetAllOrderByUser(int userId);
+
+        bool UpdateUserRole(int userId, int RoleId);
 
         ShoppingSession GetLatestShoppingSessionByUser(int userId);
 

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using E_Commerce_Api.Repository;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -31,6 +32,8 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+
+        [SwaggerOperation(Summary = "Create an address(Anyone)")]
         public IActionResult CreateUserAddress([FromQuery] int userId,[FromBody] UserAddressDto userAddressCreate) {
             if (userAddressCreate == null)
                 return BadRequest(ModelState);
@@ -63,6 +66,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
 
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Get One Address (Admin/Manager/Owner)")]
         public IActionResult GetOneUserAddress(int UserAddressId)
         {
             if(!_userAddressRepository.CheckIfUserAddressExist(UserAddressId)){
@@ -81,6 +85,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type=typeof(IEnumerable<UserAddress>))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Get All Address (Admin/Manager)")]
         public IActionResult GetUserAddresses()
         {
             var userAddresses = _mapper.Map<List<UserAddressDto>>(_userAddressRepository.GetAllUserAddresses());
@@ -97,6 +102,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Update One Address (Admin/Manager/Owner)")]
         public IActionResult UpdateUserAddress(int userAddressId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] UserAddressDto userAddressUpdate)
         {
 
@@ -134,6 +140,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Delete One Address (Admin/Manager/Owner)")]
 
         public IActionResult DeleteUserAddress(int userAddressId,[FromQuery] int actionPeformerId) {
             if(!_userAddressRepository.CheckIfUserAddressExist(userAddressId)){

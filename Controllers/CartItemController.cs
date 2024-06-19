@@ -8,6 +8,7 @@ using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -36,6 +37,8 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Create a Cart Item (Anyone)")]
+
         public IActionResult CreateCartItem([FromQuery] int productId,[FromQuery] int shoppingSessionId,[FromBody] CartItemDto cartItemCreate) {
             if (cartItemCreate == null)
                 return BadRequest(ModelState);
@@ -63,6 +66,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(CartItem))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Get One Cart Item (Admin/Manager/Owner)")]
         public IActionResult GetOneCartItem(int cartItemId)
         {
             if(! _cartItemRepository.CheckIfCartItemExist(cartItemId)){
@@ -80,6 +84,8 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Update One Cart Item (Admin/Manager/Owner)")]
+
         public IActionResult UpdateCartItem(int cartItemId,[FromQuery] int productId,[FromQuery] int actionPeformerId,[FromQuery] int shoppingSessionId,[FromBody] CartItemDto cartItemUpdate) {
             if (cartItemUpdate == null)
                 return BadRequest(ModelState);
@@ -117,6 +123,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Delete One Cart Item (Admin/Manager/Owner)")]
         public IActionResult DeleteCartItem(int cartItemId,[FromQuery] int actionPeformerId) {
             if(!_cartItemRepository.CheckIfCartItemExist(cartItemId)){
                 return NotFound();

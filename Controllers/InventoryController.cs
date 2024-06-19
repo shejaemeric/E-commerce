@@ -9,6 +9,7 @@ using E_Commerce_Api.Dto;
 using E_Commerce_Api.Models;
 using E_Commerce_Api.Repository;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -31,7 +32,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
-
+        [SwaggerOperation(Summary = "Create an Inventory(Admin/Manager)")]
         public IActionResult CreateInventory([FromBody] InventoryDto inventoryCreate) {
             if (inventoryCreate == null)
                 return BadRequest(ModelState);
@@ -52,6 +53,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type=typeof(IEnumerable<Inventory>))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Get All Inventories(Admin/Manager)")]
 
         public IActionResult GetAllInventories()
         {
@@ -67,6 +69,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(Inventory))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Get One Inventory(Admin/Manager)")]
         public IActionResult GetOneInventory(int inventoryId)
         {
             if(! _inventoryRepository.CheckIfInvetoryExist(inventoryId)){
@@ -88,8 +91,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager")]
-
-
+        [SwaggerOperation(Summary = "Update an Inventory(Admin/Manager)")]
 
         public IActionResult UpdateInventory(int inventoryId,[FromBody] InventoryDto inventoryUpdate,[FromQuery] int actionPeformerId)
         {
@@ -124,7 +126,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
-
+        [SwaggerOperation(Summary = "Delete an Inventory(Admin/Manager)")]
 
         public IActionResult DeleteInventory(int inventoryId,[FromQuery] int actionPeformerId) {
             if(!_inventoryRepository.CheckIfInvetoryExist(inventoryId)){

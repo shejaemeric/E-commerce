@@ -10,7 +10,7 @@ namespace E_Commerce_Api.Interfaces
     {
         ICollection<Discount> GetAllDiscounts();
         Discount GetOneDiscount(int discountId);
-        bool CheckIfDiscountExist(int discountId);
+        bool CheckIfDiscountExist(int? discountId);
         bool CreateDiscount(Discount discount);
 
         bool UpdateDiscount(Discount discount,int actionPeformerId, string referenceId);

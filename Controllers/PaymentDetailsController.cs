@@ -8,6 +8,7 @@ using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -31,7 +32,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        [Authorize(Policy = "Admin")]
+        [SwaggerOperation(Summary = "Create One Payment Details (Anyone)")]
         public IActionResult CreatePaymentDetails([FromBody] PaymentDetailsDto paymentDetailCreate) {
             if (paymentDetailCreate == null)
                 return BadRequest(ModelState);
@@ -67,6 +68,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(PaymentDetail))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Get One Payment Detail (Admin/Manager)")]
         public IActionResult GetOnePaymentDetail(int paymentDetailId)
         {
             if(! _paymentDetailsRepository.CheckIfPaymentDetailExist(paymentDetailId)){
@@ -87,6 +89,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin")]
+        [SwaggerOperation(Summary = "Update One Payment Detail (Admin/Manager)")]
         public IActionResult UpdatePaymentDetail(int paymentDetailId,[FromBody] PaymentDetailsDto paymentDetailUpdate,[FromQuery] int actionPeformerId)
         {
             if (paymentDetailUpdate == null)

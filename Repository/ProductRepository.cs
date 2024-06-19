@@ -24,12 +24,10 @@ namespace E_Commerce_Api.Repository
             return _context.Products.Any(u => u.Id ==productId);
         }
 
-        public bool CreateProduct(int discountId, int inventoryId, int productCategoryId, Product product)
+        public bool CreateProduct(int inventoryId, int productCategoryId, Product product,int? discountId = null)
         {
-            var discount = _context.Discounts.Find(discountId);
-            if (discount == null) {
-                return false;
-            }
+
+
             var inventory = _context.Inventories.Find(inventoryId);
             if (inventory == null) {
                 return false;
@@ -39,7 +37,12 @@ namespace E_Commerce_Api.Repository
                 return false;
             }
 
-            product.Discount= discount;
+            if (discountId != null) {
+                var discount = _context.Discounts.Find(discountId);
+                 product.Discount= discount;
+            }
+
+
             product.Inventory = inventory;
             product.Is_deleted = false;
             product.Deleted_At = DateTime.Now;

@@ -8,6 +8,7 @@ using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -36,7 +37,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-
+        [SwaggerOperation(Summary = "Create an Order Detail (Anyone)")]
         public IActionResult CreateOrderDetail([FromQuery] int paymentDetailId,[FromQuery] int userId,[FromBody] OrderDetailsDto orderDetailCreate) {
 
             if (orderDetailCreate == null)
@@ -63,6 +64,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(ICollection<OrderDetail>))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Get All Order Details (Admin/Manager)")]
         public IActionResult GetAllOrderDetails()
         {
 
@@ -80,6 +82,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(OrderDetail))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Get One Order Details (Admin/Manager/Owner)")]
         public IActionResult GetOneOrderDetail(int orderDetailId)
         {
             if(! _orderDetailRepository.CheckIfOrderDetailExist(orderDetailId)){
@@ -97,6 +100,8 @@ namespace E_Commerce_Api.Controllers
         [HttpPost("{orderDetailId}/orderItems")]
         [ProducesResponseType(200,Type=typeof(ICollection<OrderItem>))]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Get All Order Items from Order Details (Admin/Manager/Owner)")]
         public IActionResult GetAlllOrderItemByOrderDetail(int orderDetailId)
         {
             if(! _orderDetailRepository.CheckIfOrderDetailExist(orderDetailId)){
@@ -115,6 +120,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Update One Order Detail (Admin/Manager)")]
         public IActionResult UpdateOrderDetail(int orderDetailId,[FromQuery] int paymentDetailId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] OrderDetailsDto orderDetailUpdate) {
 
             if (orderDetailId != orderDetailUpdate.Id) {
@@ -157,7 +163,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
-
+        [SwaggerOperation(Summary = "Delete One Order Detail (Admin/Manager)")]
         public IActionResult DeleteOrderDetails(int orderDetailId,[FromQuery] int actionPeformerId) {
             if(!_orderDetailRepository.CheckIfOrderDetailExist(orderDetailId)){
                 return NotFound();

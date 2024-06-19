@@ -8,6 +8,7 @@ using E_Commerce_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -34,6 +35,7 @@ namespace E_Commerce_Api.Controllers
         [HttpPost()]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [SwaggerOperation(Summary = "Create One Order Item (Anyone)")]
         public IActionResult CreateOrderItem([FromQuery] int orderDetailId,[FromQuery] int productId,[FromBody] CreateOrderItemsDto orderItemCreate) {
             if (orderItemCreate == null)
                 return BadRequest(ModelState);
@@ -60,6 +62,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type = typeof(ICollection<OrderItem>))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Get All Order Items (Admin/Manager)")]
         public IActionResult GetAllOrderItems()
         {
 
@@ -75,6 +78,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200,Type=typeof(OrderItem))]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager/Owner")]
+        [SwaggerOperation(Summary = "Get One Order Item (Admin/Manager/Owner)")]
         public IActionResult GetOneOrderItem(int orderItemId)
         {
             if(! _orderItemRepository.CheckIfOrderItemExist(orderItemId)){
@@ -95,6 +99,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Update One Order Item (Admin/Manager)")]
         public IActionResult UpdateOrderItem(int orderItemId,[FromQuery] int orderDetailId,[FromQuery] int actionPeformerId,[FromQuery] int productId,[FromBody] CreateOrderItemsDto orderItemUpdate) {
             if (orderItemUpdate == null)
                 return BadRequest(ModelState);
@@ -134,6 +139,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
+        [SwaggerOperation(Summary = "Delete One Order Item (Admin/Manager)")]
         public IActionResult DeleteOrderItem(int orderItemId,[FromQuery] int actionPeformerId) {
             if(!_orderItemRepository.CheckIfOrderItemExist(orderItemId)){
                 return NotFound();

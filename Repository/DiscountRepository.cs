@@ -18,7 +18,7 @@ namespace E_Commerce_Api.Repository
             _context = context;
         }
 
-        public bool CheckIfDiscountExist(int discountId)
+        public bool CheckIfDiscountExist(int? discountId)
         {
             return _context.Discounts.Any(d => d.Id == discountId);
         }

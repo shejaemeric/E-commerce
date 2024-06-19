@@ -3,12 +3,26 @@ using E_Commerce_Api.Models;
 using System.Linq;
 using System.Data;
 
+
+// getAllOrdersDetails => OrderDetailReport
+
+// getAllOrderDetailsHavingDiscount => OrderDetailReport
+
+
+// getAllValidOrderDetails => OrderDetailReport
+
+
+// getAllOutOfStockProducts => OutOfStockProductsReport
+
+// getAllAbandonedCarts => AbandonedCartsReport
+
 namespace E_Commerce_Api.Data
 {
     public class DataContext : DbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
+
         }
 
         public DbSet<CartItem> CartItems { get; set; }
@@ -51,6 +65,34 @@ namespace E_Commerce_Api.Data
         public DbSet<RolePermission_Archive> RolesPermissions_Archive { get; set; }
         public DbSet<PasswordResetToken_Archive> PasswordResetTokens_Archive { get; set; }
 
+
+        public IQueryable<OrderDetailReport> getAllOrdersDetails()
+            => FromExpression(() => getAllOrdersDetails());
+
+        public IQueryable<OrderDetailReport> getTodayOrdersDetails()
+            => FromExpression(() => getTodayOrdersDetails());
+
+
+        public IQueryable<OrderDetailReport> getMonthlyOrdersDetails()
+            => FromExpression(() => getMonthlyOrdersDetails());
+
+
+        public IQueryable<OrderDetailReport> getYearlyOrdersDetails()
+            => FromExpression(() => getYearlyOrdersDetails());
+
+
+                    public IQueryable<OrderDetailByDiscount> getAllOrderDetailsHavingDiscount()
+            => FromExpression(() => getAllOrderDetailsHavingDiscount());
+
+                    public IQueryable<OrderDetailReport> getAllValidOrderDetails()
+            => FromExpression(() => getAllValidOrderDetails());
+
+                    public IQueryable< OutOfStockProductsReport> getAllOutOfStockProducts ()
+            => FromExpression(() => getAllOutOfStockProducts());
+
+                    public IQueryable<AbandonedCarts> getAllAbandonedCarts()
+            => FromExpression(() => getAllAbandonedCarts());
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -68,6 +110,18 @@ namespace E_Commerce_Api.Data
 
                 modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
 
+
+
+
+            modelBuilder.HasDbFunction(typeof(DataContext).GetMethod(nameof(getAllOrdersDetails)));
+            modelBuilder.HasDbFunction(typeof(DataContext).GetMethod(nameof(getTodayOrdersDetails)));
+            modelBuilder.HasDbFunction(typeof(DataContext).GetMethod(nameof(getMonthlyOrdersDetails)));
+            modelBuilder.HasDbFunction(typeof(DataContext).GetMethod(nameof(getYearlyOrdersDetails)));
+
+            modelBuilder.HasDbFunction(typeof(DataContext).GetMethod(nameof(getAllValidOrderDetails)));
+            modelBuilder.HasDbFunction(typeof(DataContext).GetMethod(nameof(getAllOutOfStockProducts)));
+            modelBuilder.HasDbFunction(typeof(DataContext).GetMethod(nameof(getAllAbandonedCarts)));
+            modelBuilder.HasDbFunction(typeof(DataContext).GetMethod(nameof(getAllOrderDetailsHavingDiscount)));
 
                 // Archives
 
@@ -107,7 +161,6 @@ namespace E_Commerce_Api.Data
                     .HasForeignKey(p => p.DiscountId)
                     .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<User_Archive>().HasIndex(u => u.Email).IsUnique();
 
         }
     }
