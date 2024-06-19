@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -22,10 +23,12 @@ namespace E_Commerce_Api.Controllers
 
         private readonly IPaymentDetailsRepository _paymentDetailsRepository;
         private readonly IMapper _mapper;
-        public PaymentDetailsController(IPaymentDetailsRepository paymentDetailsRepository,IMapper mapper)
+        private readonly IUserRepository _userRepository;
+        public PaymentDetailsController(IUserRepository userRepository,IPaymentDetailsRepository paymentDetailsRepository,IMapper mapper)
         {
             _paymentDetailsRepository = paymentDetailsRepository;
             _mapper=mapper;
+             _userRepository = userRepository;
         }
 
 
@@ -90,7 +93,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin")]
         [SwaggerOperation(Summary = "Update One Payment Detail (Admin/Manager)")]
-        public IActionResult UpdatePaymentDetail(int paymentDetailId,[FromBody] PaymentDetailsDto paymentDetailUpdate,[FromQuery] int actionPeformerId)
+        public IActionResult UpdatePaymentDetail(int paymentDetailId,[FromBody] PaymentDetailsDto paymentDetailUpdate)
         {
             if (paymentDetailUpdate == null)
                 return BadRequest(ModelState);
@@ -103,6 +106,11 @@ namespace E_Commerce_Api.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
 
             var paymentDetailMap = _mapper.Map<PaymentDetail>(paymentDetailUpdate);
 

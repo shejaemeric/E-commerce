@@ -10,6 +10,7 @@ using E_Commerce_Api.Models;
 using E_Commerce_Api.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -93,7 +94,7 @@ namespace E_Commerce_Api.Controllers
         [Authorize(Policy = "Admin/Manager")]
         [SwaggerOperation(Summary = "Update an Inventory(Admin/Manager)")]
 
-        public IActionResult UpdateInventory(int inventoryId,[FromBody] InventoryDto inventoryUpdate,[FromQuery] int actionPeformerId)
+        public IActionResult UpdateInventory(int inventoryId,[FromBody] InventoryDto inventoryUpdate)
         {
             if (inventoryUpdate == null)
                 return BadRequest(ModelState);
@@ -106,6 +107,11 @@ namespace E_Commerce_Api.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
 
             var inventoryMap = _mapper.Map<Inventory>(inventoryUpdate);
 

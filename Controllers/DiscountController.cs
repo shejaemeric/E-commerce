@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -95,7 +96,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager")]
         [SwaggerOperation(Summary = "Update One Discount (Admin/Manager)")]
-        public IActionResult UpdateDiscount(int discountId,[FromBody] DiscountDto discountUpdate,[FromQuery] int actionPeformerId)
+        public IActionResult UpdateDiscount(int discountId,[FromBody] DiscountDto discountUpdate)
         {
             if (discountUpdate == null)
                 return BadRequest(ModelState);
@@ -108,6 +109,11 @@ namespace E_Commerce_Api.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
 
             var discountMap = _mapper.Map<Discount>(discountUpdate);
 

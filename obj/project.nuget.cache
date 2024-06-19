@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "spafGw8W5i7yi3tEvg/2KMW+flqsam7FNiGqneJunKVn5axDBvGa31diHu/K8wyg+NI7lm1dOLpyMjDGWOlMKA==",
+  "dgSpecHash": "qlJuEnTwBCY=",
   "success": true,
-  "projectFilePath": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/E-Commerce-Api.csproj",
+  "projectFilePath": "/Users/shejaemeric/Desktop/GITHUB/E-commerce/E-Commerce-Api/E-Commerce-Api.csproj",
   "expectedPackageFiles": [
     "/Users/shejaemeric/.nuget/packages/automapper/13.0.1/automapper.13.0.1.nupkg.sha512",
     "/Users/shejaemeric/.nuget/packages/azure.core/1.24.0/azure.core.1.24.0.nupkg.sha512",
@@ -120,7 +120,10 @@
     "/Users/shejaemeric/.nuget/packages/system.text.json/7.0.0/system.text.json.7.0.0.nupkg.sha512",
     "/Users/shejaemeric/.nuget/packages/system.threading.tasks/4.3.0/system.threading.tasks.4.3.0.nupkg.sha512",
     "/Users/shejaemeric/.nuget/packages/system.threading.tasks.extensions/4.5.4/system.threading.tasks.extensions.4.5.4.nupkg.sha512",
-    "/Users/shejaemeric/.nuget/packages/system.windows.extensions/5.0.0/system.windows.extensions.5.0.0.nupkg.sha512"
+    "/Users/shejaemeric/.nuget/packages/system.windows.extensions/5.0.0/system.windows.extensions.5.0.0.nupkg.sha512",
+    "/Users/shejaemeric/.nuget/packages/microsoft.netcore.app.ref/7.0.20/microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
+    "/Users/shejaemeric/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.20/microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512",
+    "/Users/shejaemeric/.nuget/packages/microsoft.netcore.app.host.osx-arm64/7.0.20/microsoft.netcore.app.host.osx-arm64.7.0.20.nupkg.sha512"
   ],
   "logs": []
 }

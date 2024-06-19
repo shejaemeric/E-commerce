@@ -10,6 +10,7 @@ using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.ObjectModel;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -186,7 +187,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager/Owner")]
         [SwaggerOperation(Summary = "Update a Product (Admin/Manager/Owner)")]
-        public IActionResult UpdateProduct(int productId,[FromQuery] int discountId,[FromQuery] int productCategoryId,[FromQuery] int actionPeformerId,[FromQuery] int InventoryId,[FromBody] ProductDto productUpdate) {
+        public IActionResult UpdateProduct(int productId,[FromQuery] int discountId,[FromQuery] int productCategoryId,[FromQuery] int InventoryId,[FromBody] ProductDto productUpdate) {
             if (productUpdate == null)
                 return BadRequest(ModelState);
             if (productId != productUpdate.Id)
@@ -202,6 +203,11 @@ namespace E_Commerce_Api.Controllers
             if(!_discountRepository.CheckIfDiscountExist(discountId)){
                 return NotFound(new {errorMessage = "Discount not found"});
 
+            }
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
             }
 
 

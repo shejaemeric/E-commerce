@@ -67,6 +67,7 @@ namespace E_Commerce_Api.helpers
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserAuthorizationRequirement requirement)
         {
             var role = context.User.FindFirstValue(ClaimTypes.Role);
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(role);
 
             _logger.LogInformation(role);
@@ -171,6 +172,7 @@ namespace E_Commerce_Api.helpers
                     }
                     break;
                 case "UserPayment":
+                    Console.WriteLine();
                     if (!routeValues.ContainsKey("userPaymentId") || !_userPaymentRepository.IsUserPaymentOwner(int.Parse(routeValues["userPaymentId"]?.ToString()), int.Parse(userId)))
                     {
                         context.Fail();

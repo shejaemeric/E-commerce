@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -100,7 +101,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager")]
         [SwaggerOperation(Summary = "Update One Order Item (Admin/Manager)")]
-        public IActionResult UpdateOrderItem(int orderItemId,[FromQuery] int orderDetailId,[FromQuery] int actionPeformerId,[FromQuery] int productId,[FromBody] CreateOrderItemsDto orderItemUpdate) {
+        public IActionResult UpdateOrderItem(int orderItemId,[FromQuery] int orderDetailId,[FromQuery] int productId,[FromBody] CreateOrderItemsDto orderItemUpdate) {
             if (orderItemUpdate == null)
                 return BadRequest(ModelState);
 
@@ -120,6 +121,11 @@ namespace E_Commerce_Api.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
 
             var orderItemMap = _mapper.Map<OrderItem>(orderItemUpdate);
 

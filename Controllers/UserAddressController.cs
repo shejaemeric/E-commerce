@@ -10,6 +10,7 @@ using E_Commerce_Api.Dto;
 using E_Commerce_Api.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -103,7 +104,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager/Owner")]
         [SwaggerOperation(Summary = "Update One Address (Admin/Manager/Owner)")]
-        public IActionResult UpdateUserAddress(int userAddressId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] UserAddressDto userAddressUpdate)
+        public IActionResult UpdateUserAddress(int userAddressId,[FromQuery] int userId,[FromBody] UserAddressDto userAddressUpdate)
         {
 
             if (userAddressId != userAddressUpdate.Id) {
@@ -120,6 +121,12 @@ namespace E_Commerce_Api.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
+
 
             var userAddressMap = _mapper.Map<UserAddress>(userAddressUpdate);
 
@@ -142,14 +149,17 @@ namespace E_Commerce_Api.Controllers
         [Authorize(Policy = "Admin/Manager/Owner")]
         [SwaggerOperation(Summary = "Delete One Address (Admin/Manager/Owner)")]
 
-        public IActionResult DeleteUserAddress(int userAddressId,[FromQuery] int actionPeformerId) {
+        public IActionResult DeleteUserAddress(int userAddressId) {
             if(!_userAddressRepository.CheckIfUserAddressExist(userAddressId)){
                 return NotFound();
             }
 
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+
             if(!_userRepository.CheckIfUserExist(actionPeformerId)){
-                return NotFound();
+               return StatusCode(405, "User not Allowed/Authenticated");
             }
+
 
             Guid guid = Guid.NewGuid();
             string referenceId = guid.ToString();

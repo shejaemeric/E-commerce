@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -20,10 +21,12 @@ namespace E_Commerce_Api.Controllers
 
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
-        public RoleController(IRoleRepository roleRepository,IMapper mapper)
+        private readonly IUserRepository _userRepository;
+        public RoleController(IRoleRepository roleRepository,IMapper mapper,IUserRepository userRepository)
         {
             _roleRepository = roleRepository;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
         [HttpPost()]
@@ -130,10 +133,15 @@ namespace E_Commerce_Api.Controllers
         [Authorize(Policy = "Admin")]
 
         [SwaggerOperation(Summary = "Delete a Role (Admin)")]
-        public IActionResult DeleteRole(int roleId,[FromQuery] int actionPeformerId) {
+        public IActionResult DeleteRole(int roleId) {
             if(!_roleRepository.CheckIfRoleExist(roleId)){
                 return NotFound();
             }
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
+
 
             Guid guid = Guid.NewGuid();
             string referenceId = guid.ToString();

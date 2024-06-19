@@ -9,6 +9,8 @@ using E_Commerce_Api.Models;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -26,7 +28,6 @@ namespace E_Commerce_Api.Controllers
             _mapper = mapper;
             _userPaymentRepository = userPaymentRepository;
             _userRepository = userRepository;
-
         }
 
 
@@ -103,7 +104,7 @@ namespace E_Commerce_Api.Controllers
 
         [Authorize(Policy = "Admin/Manager/Owner")]
         [SwaggerOperation(Summary = "Update One User Payment(Admin/Manager/Owner)")]
-        public IActionResult UpdateUserPayment(int userPaymentId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] UserPaymentDto userPaymentUpdate)
+        public IActionResult UpdateUserPayment(int userPaymentId,[FromQuery] int userId,[FromBody] UserPaymentDto userPaymentUpdate)
         {
             if (userPaymentUpdate == null)
                 return BadRequest(ModelState);
@@ -116,6 +117,11 @@ namespace E_Commerce_Api.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
 
             var userPaymentMap = _mapper.Map<UserPayment>(userPaymentUpdate);
 
@@ -141,13 +147,13 @@ namespace E_Commerce_Api.Controllers
 
         [Authorize(Policy = "Admin/Manager/Owner")]
         [SwaggerOperation(Summary = "Delete One User Payment(Admin/Manager/Owner)")]
-        public IActionResult DeleteUserPayment(int userPaymentId,[FromQuery] int actionPeformerId) {
+        public IActionResult DeleteUserPayment(int userPaymentId) {
             if(!_userPaymentRepository.CheckIfUserPaymentExist(userPaymentId)){
                 return NotFound();
             }
-
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
             if(!_userRepository.CheckIfUserExist(actionPeformerId)){
-                return NotFound();
+               return StatusCode(405, "User not Allowed/Authenticated");
             }
 
             Guid guid = Guid.NewGuid();
@@ -160,5 +166,6 @@ namespace E_Commerce_Api.Controllers
             }
             return Ok("User Payment Deleted Successfully");
          }
+
     }
 }

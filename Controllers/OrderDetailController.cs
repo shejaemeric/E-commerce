@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -121,7 +122,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(400)]
         [Authorize(Policy = "Admin/Manager")]
         [SwaggerOperation(Summary = "Update One Order Detail (Admin/Manager)")]
-        public IActionResult UpdateOrderDetail(int orderDetailId,[FromQuery] int paymentDetailId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] OrderDetailsDto orderDetailUpdate) {
+        public IActionResult UpdateOrderDetail(int orderDetailId,[FromQuery] int paymentDetailId,[FromQuery] int userId,[FromBody] OrderDetailsDto orderDetailUpdate) {
 
             if (orderDetailId != orderDetailUpdate.Id) {
                 return BadRequest(ModelState);
@@ -144,6 +145,12 @@ namespace E_Commerce_Api.Controllers
             }
             if (!ModelState.IsValid)
                 return BadRequest();
+
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
 
             Guid guid = Guid.NewGuid();
             string referenceId = guid.ToString();

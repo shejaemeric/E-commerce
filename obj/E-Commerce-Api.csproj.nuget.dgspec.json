@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/E-Commerce-Api.csproj": {}
+    "/Users/shejaemeric/Desktop/GITHUB/E-commerce/E-Commerce-Api/E-Commerce-Api.csproj": {}
   },
   "projects": {
-    "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/E-Commerce-Api.csproj": {
+    "/Users/shejaemeric/Desktop/GITHUB/E-commerce/E-Commerce-Api/E-Commerce-Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/E-Commerce-Api.csproj",
+        "projectUniqueName": "/Users/shejaemeric/Desktop/GITHUB/E-commerce/E-Commerce-Api/E-Commerce-Api.csproj",
         "projectName": "E-Commerce-Api",
-        "projectPath": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/E-Commerce-Api.csproj",
+        "projectPath": "/Users/shejaemeric/Desktop/GITHUB/E-commerce/E-Commerce-Api/E-Commerce-Api.csproj",
         "packagesPath": "/Users/shejaemeric/.nuget/packages/",
-        "outputPath": "/Users/shejaemeric/Documents/Projects/E-commerce/E-Commerce-Api/obj/",
+        "outputPath": "/Users/shejaemeric/Desktop/GITHUB/E-commerce/E-Commerce-Api/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/shejaemeric/.nuget/NuGet/NuGet.Config"
@@ -20,7 +20,6 @@
           "net7.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/sdk/7.0.313/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -33,6 +32,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -115,6 +119,20 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[7.0.20, 7.0.20]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.osx-arm64",
+              "version": "[7.0.20, 7.0.20]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[7.0.20, 7.0.20]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -123,7 +141,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.313/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.302/RuntimeIdentifierGraph.json"
         }
       }
     }

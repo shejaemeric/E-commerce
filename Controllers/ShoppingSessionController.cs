@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -82,7 +83,7 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager/Owner")]
         [SwaggerOperation(Summary = "Update a Shopping Session (Admin/Manager/Owner)")]
-        public IActionResult UpdateShoppingSession(int shoppingSessionId,[FromQuery] int userId,[FromQuery] int actionPeformerId,[FromBody] ShoppingSessionDto shoppingSessionUpdate)
+        public IActionResult UpdateShoppingSession(int shoppingSessionId,[FromQuery] int userId,[FromBody] ShoppingSessionDto shoppingSessionUpdate)
         {
             if (shoppingSessionUpdate == null)
                 return BadRequest(ModelState);
@@ -95,6 +96,12 @@ namespace E_Commerce_Api.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
+
 
             var shoppingSessionMap = _mapper.Map<ShoppingSession>(shoppingSessionUpdate);
 
@@ -117,13 +124,16 @@ namespace E_Commerce_Api.Controllers
         [Authorize(Policy = "Admin/Manager/Owner")]
 
         [SwaggerOperation(Summary = "Delete a Shopping Session (Admin/Manager/Owner)")]
-        public IActionResult DeleteShoppingSession(int shoppingSessionId,[FromQuery] int actionPeformerId) {
+        public IActionResult DeleteShoppingSession(int shoppingSessionId) {
             if(!_shoppingSessionRepository.CheckIfShoppingSessionExist(shoppingSessionId)){
                 return NotFound();
             }
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
             if(!_userRepository.CheckIfUserExist(actionPeformerId)){
-                return NotFound();
+               return StatusCode(405, "User not Allowed/Authenticated");
             }
+
 
             Guid guid = Guid.NewGuid();
             string referenceId = guid.ToString();

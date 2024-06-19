@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace E_Commerce_Api.Controllers
 {
@@ -86,7 +87,7 @@ namespace E_Commerce_Api.Controllers
         [Authorize(Policy = "Admin/Manager/Owner")]
         [SwaggerOperation(Summary = "Update One Cart Item (Admin/Manager/Owner)")]
 
-        public IActionResult UpdateCartItem(int cartItemId,[FromQuery] int productId,[FromQuery] int actionPeformerId,[FromQuery] int shoppingSessionId,[FromBody] CartItemDto cartItemUpdate) {
+        public IActionResult UpdateCartItem(int cartItemId,[FromQuery] int productId,[FromQuery] int shoppingSessionId,[FromBody] CartItemDto cartItemUpdate) {
             if (cartItemUpdate == null)
                 return BadRequest(ModelState);
 
@@ -104,6 +105,11 @@ namespace E_Commerce_Api.Controllers
 
             if(!_shoppingSessionRepository.CheckIfShoppingSessionExist(shoppingSessionId)){
                 return NotFound(new {errorMessage = "Shopping Session not found"});
+            }
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
             }
 
             var cartItemMap = _mapper.Map<CartItem>(cartItemUpdate);

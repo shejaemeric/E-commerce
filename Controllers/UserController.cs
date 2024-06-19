@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce_Api.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 
 namespace E_Commerce_Api.Controllers
@@ -209,13 +210,18 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager/Owner")]
         [SwaggerOperation(Summary = "Update a user (Admin/Manager/Owner) ")]
-        public IActionResult UpdateUser(int userId, [FromBody] CreateUserDto userUpdate, [FromQuery] int actionPeformerId)
+        public IActionResult UpdateUser(int userId, [FromBody] CreateUserDto userUpdate)
         {
             if (userUpdate == null)
                 return BadRequest(ModelState);
 
             if (userId != userUpdate.Id)
                 return BadRequest(ModelState);
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
 
             var user = _userRepository.GetAllUsers().Where(c => c.Username ==  userUpdate.Username).FirstOrDefault();
 
@@ -263,13 +269,19 @@ namespace E_Commerce_Api.Controllers
         [ProducesResponseType(404)]
         [Authorize(Policy = "Admin/Manager")]
         [SwaggerOperation(Summary = "Change User's Role (Admin/Manager) ")]
-        public IActionResult UpdateUserRole(int userId,[FromQuery] int actionPeformerId,[FromBody]int roleId)
+        public IActionResult UpdateUserRole(int userId,[FromBody]int roleId)
         {
             if (!_roleRepository.CheckIfRoleExist(roleId))
                 return NotFound();
 
             if (!_userRepository.CheckIfUserExist(userId))
                 return NotFound();
+
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
+
 
             if (!_userRepository.UpdateUserRole(userId,roleId))
             {
@@ -289,17 +301,19 @@ namespace E_Commerce_Api.Controllers
 
         [Authorize(Policy = "Admin/Manager/Owner")]
         [SwaggerOperation(Summary = "Delete a user (Admin/Manager/Owner)")]
-        public IActionResult DeleteUser(int actionPeformerId, int userId)
+        public IActionResult DeleteUser(int userId)
         {
-            if (!_userRepository.CheckIfUserExist(actionPeformerId))
-            {
-                return NotFound();
-            }
+
 
             if (!_userRepository.CheckIfUserExist(userId))
             {
                 return NotFound();
             }
+            var actionPeformerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if(!_userRepository.CheckIfUserExist(actionPeformerId)){
+               return StatusCode(405, "User not Allowed/Authenticated");
+            }
+
 
             Guid guid = Guid.NewGuid();
             string referenceId = guid.ToString();
